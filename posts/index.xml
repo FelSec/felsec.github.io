@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on FelSec - Blog</title>
-    <link>/posts/</link>
+    <link>https://felsec.com/posts/</link>
     <description>Recent content in Posts on FelSec - Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 07 Nov 2020 18:57:56 +0100</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 07 Nov 2020 18:57:56 +0100</lastBuildDate><atom:link href="https://felsec.com/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>TryHackMe - Steel Mountain</title>
-      <link>/posts/tryhackme-steelmountain/</link>
+      <link>https://felsec.com/posts/tryhackme-steelmountain/</link>
       <pubDate>Sat, 07 Nov 2020 18:57:56 +0100</pubDate>
       
-      <guid>/posts/tryhackme-steelmountain/</guid>
+      <guid>https://felsec.com/posts/tryhackme-steelmountain/</guid>
       <description>Hack into a Mr. Robot themed Windows machine. Use metasploit for initial access, utilise powershell for Windows privilege escalation enumeration and learn a new technique to get Administrator access.</description>
     </item>
     
     <item>
       <title>TryHackMe - Kenobi</title>
-      <link>/posts/tryhackme-kenobi/</link>
+      <link>https://felsec.com/posts/tryhackme-kenobi/</link>
       <pubDate>Fri, 26 Jun 2020 17:38:44 +0100</pubDate>
       
-      <guid>/posts/tryhackme-kenobi/</guid>
+      <guid>https://felsec.com/posts/tryhackme-kenobi/</guid>
       <description>Walkthrough on exploiting a Linux machine. Enumerate Samba for shares, manipulate a vulnerable version of proftpd and escalate your privileges with path variable manipulation.</description>
     </item>
     
