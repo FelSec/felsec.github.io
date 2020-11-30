@@ -3,37 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>felsec.com/</loc>
+    <loc>/</loc>
     <lastmod>2020-11-07T18:57:56+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/posts/</loc>
+    <loc>/posts/</loc>
     <lastmod>2020-11-07T18:57:56+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2020-11-07T18:57:56+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/tags/tryhackme/</loc>
+    <loc>/tags/tryhackme/</loc>
     <lastmod>2020-11-07T18:57:56+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/posts/tryhackme-steelmountain/</loc>
+    <loc>/posts/tryhackme-steelmountain/</loc>
     <lastmod>2020-11-07T18:57:56+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/posts/tryhackme-kenobi/</loc>
+    <loc>/posts/tryhackme-kenobi/</loc>
     <lastmod>2020-06-26T17:38:44+01:00</lastmod>
   </url>
   
   <url>
-    <loc>felsec.com/categories/</loc>
+    <loc>/categories/</loc>
   </url>
   
 </urlset>
