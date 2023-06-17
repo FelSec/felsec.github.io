@@ -5,5 +5,7 @@
   <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
   <script type="text/javascript">
     alert("FelSec!");
+    console.log("FelSec!");
+    console.log(document.getElementById('f'));
   </script>
 </svg>
