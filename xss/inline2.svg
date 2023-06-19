@@ -1,6 +1,6 @@
 <svg width="100%" height="100%" viewBox="0 0 100 100"
   xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <circle cx="60" cy="60" r="45" fill="purple"
+  <circle cx="5" cy="5" r="45" fill="purple"
           id="felsec" o="felsec"/>
-  <image xlink:href="x" height="200" width="200" onerror="alert('FelSec!')"/>
+  <image xlink:href="https://felsec.com/avatar.png" height="2" width="2" onload="alert('FelSec!')"/>
 </svg>
