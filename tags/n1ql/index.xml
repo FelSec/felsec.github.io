@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>N1QL on FelSec - Blog</title>
+    <link>http://localhost:1313/tags/n1ql/</link>
+    <description>Recent content in N1QL on FelSec - Blog</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Aug 2024 23:44:35 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/n1ql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>N1QL Injection - Part 1</title>
+      <link>http://localhost:1313/posts/n1qlinjection-part1/</link>
+      <pubDate>Mon, 19 Aug 2024 23:44:35 +0100</pubDate>
+      <guid>http://localhost:1313/posts/n1qlinjection-part1/</guid>
+      <description>Introduction Several months ago, I came across a N1QL injection vulnerability while testing an application. This was a vulnerability I had never come across before and although it was quite easy to understand and exploit, I was unable to find many resources covering it (one or two blog posts and a few CVEs).&#xA;This series of blog posts will cover what I have been able to learn through my own research.</description>
+    </item>
+  </channel>
+</rss>
