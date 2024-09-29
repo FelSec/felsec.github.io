@@ -2,18 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Couchbase on FelSec - Blog</title>
-    <link>http://localhost:1313/tags/couchbase/</link>
+    <link>https://felsec.com/tags/couchbase/</link>
     <description>Recent content in Couchbase on FelSec - Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Aug 2024 23:44:35 +0100</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/couchbase/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 02 Sep 2024 20:41:34 +0100</lastBuildDate>
+    <atom:link href="https://felsec.com/tags/couchbase/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>N1QL Injection - Part 2</title>
+      <link>https://felsec.com/posts/n1qlinjection-part2/</link>
+      <pubDate>Mon, 02 Sep 2024 20:41:34 +0100</pubDate>
+      <guid>https://felsec.com/posts/n1qlinjection-part2/</guid>
+      <description>Exploiting N1QL injection.</description>
+    </item>
     <item>
       <title>N1QL Injection - Part 1</title>
-      <link>http://localhost:1313/posts/n1qlinjection-part1/</link>
+      <link>https://felsec.com/posts/n1qlinjection-part1/</link>
       <pubDate>Mon, 19 Aug 2024 23:44:35 +0100</pubDate>
-      <guid>http://localhost:1313/posts/n1qlinjection-part1/</guid>
-      <description>Introduction Several months ago, I came across a N1QL injection vulnerability while testing an application. This was a vulnerability I had never come across before and although it was quite easy to understand and exploit, I was unable to find many resources covering it (one or two blog posts and a few CVEs).&#xA;This series of blog posts will cover what I have been able to learn through my own research.</description>
+      <guid>https://felsec.com/posts/n1qlinjection-part1/</guid>
+      <description>A brief introduction into N1QL and N1QL injection.</description>
     </item>
   </channel>
 </rss>

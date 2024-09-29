@@ -6,8 +6,22 @@
     <description>Recent content on FelSec - Blog</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 07 Nov 2020 18:57:56 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 02 Sep 2024 20:41:34 +0100</lastBuildDate>
     <atom:link href="https://felsec.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>N1QL Injection - Part 2</title>
+      <link>https://felsec.com/posts/n1qlinjection-part2/</link>
+      <pubDate>Mon, 02 Sep 2024 20:41:34 +0100</pubDate>
+      <guid>https://felsec.com/posts/n1qlinjection-part2/</guid>
+      <description>Exploiting N1QL injection.</description>
+    </item>
+    <item>
+      <title>N1QL Injection - Part 1</title>
+      <link>https://felsec.com/posts/n1qlinjection-part1/</link>
+      <pubDate>Mon, 19 Aug 2024 23:44:35 +0100</pubDate>
+      <guid>https://felsec.com/posts/n1qlinjection-part1/</guid>
+      <description>A brief introduction into N1QL and N1QL injection.</description>
+    </item>
     <item>
       <title>TryHackMe - Steel Mountain</title>
       <link>https://felsec.com/posts/tryhackme-steelmountain/</link>
