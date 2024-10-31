@@ -15,5 +15,12 @@
       <guid>https://felsec.com/posts/n1qlinjection-part2/</guid>
       <description>Exploiting N1QL injection.</description>
     </item>
+    <item>
+      <title>N1QL Injection - Part 1</title>
+      <link>https://felsec.com/posts/n1qlinjection-part1/</link>
+      <pubDate>Thu, 31 Oct 2024 09:00:00 +0000</pubDate>
+      <guid>https://felsec.com/posts/n1qlinjection-part1/</guid>
+      <description>A brief introduction into N1QL and N1QL injection.</description>
+    </item>
   </channel>
 </rss>
