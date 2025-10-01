@@ -102,14 +102,14 @@
 <p>In the last post we delved into the fundamentals of N1QL, N1QL injection, and identifying vulnerable endpoints (<a href="/posts/n1qlinjection-part1">Part 1</a>). In this post, we&rsquo;re shifting focus to exploiting N1QL injection, and covering some handy techniques to streamline the process.</p>
 <p>Much like classic SQL injection, data extraction follows the process of identifying valid tables (buckets within Couchbase) and using the available functions to request the fields and data. One of the big benefits offered by the N1QL query language, and there are a few from an attackers perspective, is the ability to use the <code>BASE64</code> and <code>ENCODE_JSON</code> functions that return the data either base64 encoded or in JSON format.</p>
 <h2 id="exploit-types">Exploit Types</h2>
-<p>There are 4 main methods for exploiting N1QL injection:</p>
+<p>There are 5 main methods for exploiting N1QL injection:</p>
 <ol>
 <li>Boolean-Based</li>
 <li>String Concatenation</li>
 <li>Union-Based</li>
 <li>Stacked Queries</li>
+<li>Error-Based</li>
 </ol>
-<p>There is a 5<sup>th</sup> method, Error-Based, which can be used for extracting information about N1QL queries but it has limited ability to extract data from the database. We will loosely cover this one further down in the post but it is not that useful when compared to the other ones above.</p>
 <p>One small blessing with N1QL injection is that there are no Time-Based exploitation methods!!</p>
 <!-- raw HTML omitted -->
 <p><img src="/posts/yay.webp" alt="Yay!"></p>
@@ -312,6 +312,7 @@ Connection: close
   }
 ]
 </code></pre><h3 id="error-based">Error-Based</h3>
+<p>**Update 1: The below is correct for versions of Couchbase prior to 7.0. From 7.0 onwards a new keyword was introduced that allows error-based N1QL injection to become a viable technique. I will cover this method in a separate blog post.</p>
 <p>Error-based N1QL injection is similar to standard SQL injection, however there is one key difference. In normal error-based SQL injection the error returns the full SQL query strings, full query results, or information that can be used in further injection attempts but with Couchbase and the N1QL query language only a portion of the affected query is returned. This can still allow us to retrieve information about the backend database (bucket names, field names, conditions being used, etc.) that we can use in further exploit attempts, but offers limited information and benefits compared to other methods.</p>
 <h5 id="example-error-messages">Example Error Messages</h5>
 <p><strong>Missing Bucket</strong></p>
