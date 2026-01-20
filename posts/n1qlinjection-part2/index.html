@@ -3,7 +3,7 @@
   <head>
     <title>N1QL Injection - Part 2 // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.152.2">
+    <meta name="generator" content="Hugo 0.154.3">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -304,8 +304,8 @@ Connection: close
   }
 ]
 </code></pre><h3 id="error-based">Error-Based</h3>
-<p>**Update 1: The below is correct for versions of Couchbase prior to 7.0. From 7.0 onwards a new keyword was introduced that allows error-based N1QL injection to become a viable technique. I will cover this method in a separate blog post.</p>
-<p>Error-based N1QL injection is similar to standard SQL injection, however there is one key difference. In normal error-based SQL injection the error returns the full SQL query strings, full query results, or information that can be used in further injection attempts but with Couchbase and the N1QL query language only a portion of the affected query is returned. This can still allow us to retrieve information about the backend database (bucket names, field names, conditions being used, etc.) that we can use in further exploit attempts, but offers limited information and benefits compared to other methods.</p>
+<p><strong>Update 1: The below is correct for versions of Couchbase prior to 7.0. From 7.0 onwards a new keyword was introduced that allows error-based N1QL injection to become a viable technique. I will cover this method in a separate blog post.</strong></p>
+<p>Error-based N1QL injection is similar to standard SQL injection, however there is one key difference. In normal error-based SQL injection the error returns the full SQL query strings, full query results, or information that can be used in further injection attempts but with Couchbase and the N1QL query language only a portion of the affected query is returned (<strong>Update 2</strong> In some cases, depending on the application and the SDK used, the error messages can contain the full N1QL query!). This can still allow us to retrieve information about the backend database (bucket names, field names, conditions being used, etc.) that we can use in further exploit attempts, but offers limited information and benefits compared to other methods.</p>
 <h5 id="example-error-messages">Example Error Messages</h5>
 <p><strong>Missing Bucket</strong></p>
 <pre tabindex="0"><code>Request:

