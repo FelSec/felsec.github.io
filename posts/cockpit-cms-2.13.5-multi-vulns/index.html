@@ -121,7 +121,7 @@
 <p>After testing a few open-source CMS projects as part of pen tests for work, and finding a few vulnerabilities, I decided to take a look at some other open-source CMS projects to see what else could be found. In my search I can across Cockpit CMS, a PHP-based headless CMS, where I found a rather nice bunch of issues.</p>
 <p>But first off, what is Cockpit CMS?</p>
 <p>Cockpit CMS is a modern, open-source headless content management system built with PHP that focuses on flexibility and developer control. Unlike traditional CMS platforms that lock you into a specific frontend, Cockpit acts purely as a content backend, exposing data through REST and GraphQL APIs.</p>
-<h2 id="vulnerability-1---arbitrary-code-execution-via-filter-parameter">Vulnerability 1 - Arbitrary Code Execution via <code>filter</code> Parameter</h2>
+<h2 id="vulnerability-1---arbitrary-code-execution-via-filter-parameter-cve-2026-38992">Vulnerability 1 - Arbitrary Code Execution via <code>filter</code> Parameter (CVE-2026-38992)</h2>
 <p>Before digging into the source code and setting up my own instance of Cockpit CMS, I did some searching for write ups of previous vulnerabilities and it was during this research I came across a post by PT SWARM (<a href="https://swarm.ptsecurity.com/rce-cockpit-cms/">https://swarm.ptsecurity.com/rce-cockpit-cms/</a>). Reading through, it gave me an idea as to where to start looking, specifically the <code>$func</code> operator within the Mongolite library used by the application.</p>
 <p>This non-standard operator takes a function name as its value (<code>$conditionValue</code>) and calls it parsing in a single parameter (<code>fieldValue</code>).</p>
 <pre tabindex="0"><code>            case &#39;$func&#39;:
@@ -305,7 +305,7 @@ Content-Length: 41
 <h2 id="next-steps">Next Steps</h2>
 <p>After reporting the first vulnerability, I decided to take a look at some of the modules used by the application. One module in particular caught my eye, Buckets. It had some of the same functionality as the Assets and Content modules (uploading and sharing files), but it did not seem to be directly referenced in the application and it did not have the same level of restrictions as the other two. Moreover, it did not implement the same access controls as the other modules allowing any authenticated user to access the functionality.</p>
 <p>This made it a prime target for vulnerabilities.</p>
-<h2 id="vulnerability-2---filter-bypass-to-arbitrary-code-execution">Vulnerability 2 - Filter Bypass to Arbitrary Code Execution</h2>
+<h2 id="vulnerability-2---filter-bypass-to-arbitrary-code-execution-cve-2026-38991">Vulnerability 2 - Filter Bypass to Arbitrary Code Execution (CVE-2026-38991)</h2>
 <p>The Buckets module implemented checks to prevent the uploading of <code>.php</code> files, mainly using the <code>_isFileTypeAllowed</code> function (below).</p>
 <pre tabindex="0"><code>    protected function _isFileTypeAllowed($file) {
 
@@ -553,7 +553,7 @@ PHP_SHA256=957a9b19b4a8e965ee0cc788ca74333bfffaadc206b58611b6cd3cc8b2f40110
 SERVER_NAME=http://
 Mon Mar 23 20:46:59 UTC 2026
 &lt;/pre&gt;
-</code></pre><h2 id="vulnerability-3---directory-traversal-to-arbitrary-file-write">Vulnerability 3 - Directory Traversal to Arbitrary File Write</h2>
+</code></pre><h2 id="vulnerability-3---directory-traversal-to-arbitrary-file-write-cve-2026-38993">Vulnerability 3 - Directory Traversal to Arbitrary File Write (CVE-2026-38993)</h2>
 <p>After bypassing the <code>php</code> filter, I decided to take a look at some of the other functions within the module and after a short while I identified a directory traversal vulnerability within the <code>_getPathParameter</code> function (below).</p>
 <pre tabindex="0"><code>    protected function _getPathParameter() {
 
