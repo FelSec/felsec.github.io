@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Mon, 02 Mar 2026 20:02:00 +0000</lastBuildDate>
+			<lastBuildDate>Tue, 08 Sep 2026 10:30:12 +0000</lastBuildDate>
 		
 			<atom:link href="https://felsec.com/tags/couchbase/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>N1QL Injection Part 7</title>
+				<link>https://felsec.com/posts/n1qlinjection-part7/</link>
+				<pubDate>Tue, 08 Sep 2026 10:30:12 +0000</pubDate>
+				<guid>https://felsec.com/posts/n1qlinjection-part7/</guid>
+				<description>Compression bombs are dead! Long live compression bombs!</description>
+			</item>
 			<item>
 				<title>N1QLScan</title>
 				<link>https://felsec.com/posts/n1qlscan/</link>

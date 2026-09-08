@@ -3,32 +3,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://felsec.com/posts/cockpit-cms-2.13.5-multi-vulns/</loc>
-    <lastmod>2026-04-29T10:00:37+01:00</lastmod>
+    <loc>https://felsec.com/tags/couchbase/</loc>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/</loc>
-    <lastmod>2026-04-29T10:00:37+01:00</lastmod>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
   </url><url>
-    <loc>https://felsec.com/posts/</loc>
-    <lastmod>2026-04-29T10:00:37+01:00</lastmod>
-  </url><url>
-    <loc>https://felsec.com/tags/couchbase/</loc>
-    <lastmod>2026-03-02T20:02:00+00:00</lastmod>
+    <loc>https://felsec.com/tags/injection/</loc>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/tags/n1ql/</loc>
-    <lastmod>2026-03-02T20:02:00+00:00</lastmod>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/posts/n1qlinjection-part7/</loc>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/posts/</loc>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/tags/</loc>
+    <lastmod>2026-09-08T10:30:12+00:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/posts/cockpit-cms-2.13.5-multi-vulns/</loc>
+    <lastmod>2026-04-29T10:00:37+01:00</lastmod>
   </url><url>
     <loc>https://felsec.com/posts/n1qlscan/</loc>
     <lastmod>2026-03-02T20:02:00+00:00</lastmod>
   </url><url>
-    <loc>https://felsec.com/tags/</loc>
-    <lastmod>2026-03-02T20:02:00+00:00</lastmod>
-  </url><url>
     <loc>https://felsec.com/tags/tools/</loc>
     <lastmod>2026-03-02T20:02:00+00:00</lastmod>
-  </url><url>
-    <loc>https://felsec.com/tags/injection/</loc>
-    <lastmod>2026-02-16T20:02:48+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/posts/n1qlinjection-part6/</loc>
     <lastmod>2026-02-16T20:02:48+00:00</lastmod>
