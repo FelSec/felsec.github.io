@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <title>N1QL Injection Part 7 // FelSec - Blog</title>
+    <meta charset="utf-8" />
+    <meta name="generator" content="Hugo 0.162.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="FelSec" />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="https://felsec.com/css/main.min.f6361b42d404a23cafcf1b9a8cab08905c6731c6a4a64ef829e96f416baf2537.css" />
+    <link rel="stylesheet" href="/css/code.css" />
+
+    
+    
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="N1QL Injection Part 7">
+	<meta name="twitter:description" content="Compression bombs are dead! Long live compression bombs!">
+
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part7/">
+	<meta property="og:site_name" content="FelSec - Blog">
+	<meta property="og:title" content="N1QL Injection Part 7">
+	<meta property="og:description" content="Compression bombs are dead! Long live compression bombs!">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-09-08T11:30:12+00:00">
+		<meta property="article:modified_time" content="2026-09-08T11:30:12+00:00">
+		<meta property="article:tag" content="Injection">
+		<meta property="article:tag" content="Couchbase">
+		<meta property="article:tag" content="N1QL">
+
+
+  </head>
+  <body>
+    <header class="app-header">
+      <a href="https://felsec.com/"><img class="app-header-avatar" src="/avatar.png" alt="FelSec" /></a>
+      <h1>FelSec - Blog</h1>
+      <nav class="app-header-menu">
+          <a class="app-header-menu-item" href="/">Home</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/posts/">Posts</a>
+             - 
+          
+          <a class="app-header-menu-item" href="/tags/">Tags</a>
+      </nav>
+      <p>Penetration Tester &amp; Security Researcher</p>
+      <div class="app-header-social">
+        
+          <a target="_blank" href="https://github.com/felsec" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-github">
+  <title>github</title>
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+</svg></a>
+        
+          <a target="_blank" href="https://bsky.app/profile/felsec.bsky.social" rel="noreferrer noopener"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-link">
+  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+</svg></a>
+        
+      </div>
+    </header>
+    <main class="app-container">
+      
+  <article class="post">
+    <header class="post-header">
+      <h1 class ="post-title">N1QL Injection Part 7</h1>
+      <div class="post-meta">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-calendar">
+  <title>calendar</title>
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>
+</svg>
+          Sep 8, 2026
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-clock">
+  <title>clock</title>
+  <circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+          4 min read
+        </div>
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tag">
+  <title>tag</title>
+  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line>
+</svg>
+              <a class="tag" href="https://felsec.com/tags/injection/">Injection</a>
+              <a class="tag" href="https://felsec.com/tags/couchbase/">Couchbase</a>
+              <a class="tag" href="https://felsec.com/tags/n1ql/">N1QL</a>
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <h1 id="compression-bombs-are-dead-long-live-the-compression-bomb">Compression bombs are dead! Long live the compression bomb!</h1>
+<p>The <code>UNCOMPRESS()</code> function, introduced in version 8.0, takes a base64 encoded, compressed string and returns the original uncompressed string. As with a lot of decompression functions, once it starts decrypting there is no way to stop it (without killing the process). This is something that we can take advantage of for mischief! <em><strong>Note:</strong> Several other functions are missing various checks and limitations that allow them to use vast amounts of system resources. These additional functions will be covered in a separate post</em></p>
+<p>Aside from using the function for obfuscation (see <a href="/posts/n1qlinjection-part6">Part 6</a>), we can use this function to perform a compression bomb style attack against the affected service, where sending a relatively small payload would allow the <code>UNCOMPRESS</code> function to consume a large amount of system resources.</p>
+<p>In its simplest form a N1QL (SQL++) compression bomb chains multiple <code>UNCOMPRESS</code> function calls together, where the output of one decompression step is the base64 encoded string of the next. For exmaple:</p>
+<pre tabindex="0"><code>SELECT UNCOMPRESS(UNCOMPRESS(UNCOMPRESS(UNCOMPRESS(&#39;&lt;BASE64 DATA&gt;&#39;))))
+</code></pre><p>While this works, the resulting payload is still rather large (in the order of KB or MB) making it not very practical to use.</p>
+<p>There is, however, a way to generate payloads less than 1KB in size that expand to around 100GB or potentially more. To achieve this three additional features of the N1QL language need to be used:</p>
+<ul>
+<li>the <code>EVALUATE</code> function</li>
+<li>string concatenation</li>
+<li>the <code>REPEAT</code> function.</li>
+</ul>
+<h2 id="generating-the-payload">Generating the Payload</h2>
+<p>Generating the payload is a relatively simple process:</p>
+<ul>
+<li>Generate a large amount of data</li>
+<li>Compress the data using the zlib compression algorithm</li>
+<li>Base64 encode the compressed data</li>
+<li>Convert the base64 string into a concatenated string and replacing repeated characters with the <code>REPEAT</code> function - e.g. <code>'abcdef'||REPEAT('g',100)||...</code></li>
+<li>Compress the concatenated string</li>
+<li>Base64 encode the new compressed data</li>
+<li>Compress the new base64 string</li>
+<li>Base64 encode the new compressed data, one last time.</li>
+<li>Wrap the final base64 string in the following statement: <code>SELECT EVALUATE('SELECT UNCOMPRESS('||UNCOMPRESS(UNCOMPRESS(&lt;BASE64 DATA&gt;))||')')</code></li>
+</ul>
+<p><em>Note: It is possible to repeat the final compression and encoding steps a few more times, however these extra steps do not produce significantly smaller payloads.</em></p>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p><strong>Payload - Compression bomb that expands to 10GB (803 characters):</strong></p>
+<pre tabindex="0"><code>SELECT EVALUATE(&#39;SELECT UNCOMPRESS(&#39;||UNCOMPRESS(UNCOMPRESS(&#39;eNrs[...SNIPPED...]lr4=&#39;))||&#39;)&#39;)
+</code></pre><p><strong>Triggering the vulnerability:</strong></p>
+<pre tabindex="0"><code>curl -i &#39;http://couchbaseserver:8093/query/service&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&#34;statement&#34;:&#34;SELECT EVALUATE(\&#39;SELECT UNCOMPRESS(\&#39;||UNCOMPRESS(UNCOMPRESS(\&#39;eNrs[...SNIPPED...]lr4=\&#39;))||\&#39;)\&#39;)&#34;}&#39; -u [...REDACTED...]
+</code></pre><p><strong>Result:</strong></p>
+<pre tabindex="0"><code>&gt; time curl -i &#39;http://couchbaseserver:8093/query/service&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{&#34;statement&#34;:&#34;SELECT EVALUATE(\&#39;SELECT UNCOMPRESS(\&#39;||UNCOMPRESS(UNCOMPRESS(\&#39;eNrs[...SNIPPED...]lr4=\&#39;))||\&#39;)\&#39;)&#34;}&#39; -u [...REDACTED...]
+curl: (52) Empty reply from server
+
+________________________________________________________
+Executed in   54.95 mins      fish           external
+   usr time  133.38 millis  542.00 micros  132.83 millis
+   sys time  115.80 millis  178.00 micros  115.62 millis
+</code></pre><h2 id="limitations">Limitations</h2>
+<p>While investigating this issue several strange behaviours were noted that determined how effectively it could be exploited.</p>
+<p>Firstly, the amount of disruption varied quite a lot for the same payload. For example, with the 10GB payload above the server would become unresponsive for as little as 7 minutes or for up to a hour.</p>
+<p>Secondly, using a bigger payload would not result in more or a longer disruption to the service. Although this feels counter-intuitive, Couchbase server contains some memory constraints that attempt to prevent excessive memory consumption by detecting when a process or query exceeds 90% of the available system memory. When this is detected the query engine process (<code>cbq-engine</code>) and any running queries are terminated and the service is restarted.</p>
+<p>After some experimentation it is believed, that using larger payloads cause this limit to be exceeded quicker and in a window where the system is responsive enough to allow the query engine to be restarted. Whereas using a smaller payload allows this threshold to be exceeded at a time when the system&rsquo;s performance is already compromised and the query engine is unable to be restarted in a timely manner.</p>
+<p>An effective payload size seemed to be between 60-80% of the system&rsquo;s available memory.</p>
+<h2 id="what-to-do-about-it">What to do about it?</h2>
+<p>If you are running Couchbase Server 7.6.x then you are not vulnearble to this issue, since this version of the application does not contain the necessary functions.</p>
+<p>If you are running Couchbase Server 8.0.0 or 8.0.1 then upgrade to 8.0.2.</p>
+<p>Configure per-request memory quotas in line with Couchbase&rsquo;s recommendations (more details here: <a href="https://www.couchbase.com/blog/memory-management-couchbase-query-service/">Query Service Memory Management in Couchbase</a>) and the application&rsquo;s requirements.</p>
+<h2 id="vulnerability-disclosure-timeline">Vulnerability Disclosure Timeline</h2>
+<table>
+	<thead>
+			<tr>
+					<th>Date</th>
+					<th>Event</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>27/02/2026</td>
+					<td>Vulnerability reported to Couchbase Security</td>
+			</tr>
+			<tr>
+					<td>27/02/2026</td>
+					<td>Initial acknowledgement</td>
+			</tr>
+			<tr>
+					<td>12/03/2026</td>
+					<td>Second acknowledgement confirming the vulnerability and the impact</td>
+			</tr>
+			<tr>
+					<td>01/06/2026</td>
+					<td>Couchbase Server version 8.0.2 released with the patch</td>
+			</tr>
+	</tbody>
+</table>
+<h2 id="references">References</h2>
+<p><a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/metafun.html#evaluate">https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/metafun.html#evaluate</a>
+<a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-compress">https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-compress</a>
+<a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-uncompress">https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-uncompress</a>
+<a href="https://www.couchbase.com/alerts/">https://www.couchbase.com/alerts/</a>
+<a href="https://docs.couchbase.com/server/8.0/release-notes/relnotes.html">https://docs.couchbase.com/server/8.0/release-notes/relnotes.html</a></p>
+
+    </div>
+    <div class="post-footer">
+      
+    </div>
+  </article>
+
+    </main>
+  </body>
+</html>
