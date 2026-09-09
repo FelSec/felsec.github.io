@@ -6,7 +6,18 @@
     <description>Recent content on FelSec - Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Tue, 08 Sep 2026 10:30:12 +0000</lastBuildDate><atom:link href="https://felsec.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Sep 2026 14:30:00 +0000</lastBuildDate><atom:link href="https://felsec.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>N1QL Injection Part 8</title>
+      <link>https://felsec.com/posts/n1qlinjection-part8/</link>
+      <pubDate>Wed, 09 Sep 2026 14:30:00 +0000</pubDate>
+      
+      <guid>https://felsec.com/posts/n1qlinjection-part8/</guid>
+      
+      <description>Memory Exhaustion in Couchbase Server</description>
+      
+    </item>
+    
     <item>
       <title>N1QL Injection Part 7</title>
       <link>https://felsec.com/posts/n1qlinjection-part7/</link>

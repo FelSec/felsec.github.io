@@ -3,11 +3,11 @@
 <meta http-equiv="content-type" content="text/html">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title itemprop="name">Tags | FelSec - Blog</title>
-<meta property="og:title" content="Tags | FelSec - Blog" />
-<meta name="twitter:title" content="Tags | FelSec - Blog" />
-<meta itemprop="name" content="Tags | FelSec - Blog" />
-<meta name="application-name" content="Tags | FelSec - Blog" />
+<title itemprop="name">N1QL Injection Part 8 | FelSec - Blog</title>
+<meta property="og:title" content="N1QL Injection Part 8 | FelSec - Blog" />
+<meta name="twitter:title" content="N1QL Injection Part 8 | FelSec - Blog" />
+<meta itemprop="name" content="N1QL Injection Part 8 | FelSec - Blog" />
+<meta name="application-name" content="N1QL Injection Part 8 | FelSec - Blog" />
 <meta property="og:site_name" content="" />
 
 <meta name="description" content="Penetration Tester &amp; Security Researcher">
@@ -18,36 +18,83 @@
 <meta property="og:locale" content="en-US" />
 <meta name="language" content="en-US" />
 
-  <link rel="alternate" hreflang="en" href="https://felsec.com/tags/" title="" />
+  <link rel="alternate" hreflang="en" href="https://felsec.com/posts/n1qlinjection-part8/" title="" />
 
 
 
 
+
+    
+    
+    
+
+    <meta property="og:type" content="article" />
+    <meta property="og:article:published_time" content=2026-09-09T14:30:00Z />
+    <meta property="article:published_time" content=2026-09-09T14:30:00Z />
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part8/" />
+
+    
+    <meta property="og:article:author" content="FelSec" />
+    <meta property="article:author" content="FelSec" />
+    <meta name="author" content="FelSec" />
+    
+    
+
+    
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "N1QL Injection Part 8",
+        "author": {
+        "@type": "Person",
+        "name": "FelSec"
+        },
+        "datePublished": "2026-09-09",
+        "description": "",
+        "wordCount":  525 ,
+        "mainEntityOfPage": "https://felsec.com/posts/n1qlinjection-part8/",
+        "dateModified": "2026-09-09",
+        "image": {
+        "@type": "ImageObject",
+        "url": ""
+        },
+        "publisher": {
+        "@type": "Organization",
+        "name": "FelSec - Blog"
+        }
+    }
+    </script>
 
 
 <meta name="generator" content="Hugo 0.165.0">
 
     
-    <meta property="og:url" content="https://felsec.com/tags/">
+    <meta property="og:url" content="https://felsec.com/posts/n1qlinjection-part8/">
 	<meta property="og:site_name" content="FelSec - Blog">
-	<meta property="og:title" content="Tags">
-	<meta property="og:description" content="Penetration Tester &amp; Security Researcher">
+	<meta property="og:title" content="N1QL Injection Part 8">
+	<meta property="og:description" content="Memory Exhaustion in Couchbase Server">
 	<meta property="og:locale" content="en_US">
-	<meta property="og:type" content="website">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="posts">
+		<meta property="article:published_time" content="2026-09-09T14:30:00+00:00">
+		<meta property="article:modified_time" content="2026-09-09T14:30:00+00:00">
+		<meta property="article:tag" content="Injection">
+		<meta property="article:tag" content="Couchbase">
+		<meta property="article:tag" content="N1QL">
 
 
     
     
 	<meta name="twitter:card" content="summary">
-	<meta name="twitter:title" content="Tags">
-	<meta name="twitter:description" content="Penetration Tester &amp; Security Researcher">
+	<meta name="twitter:title" content="N1QL Injection Part 8">
+	<meta name="twitter:description" content="Memory Exhaustion in Couchbase Server">
 
 
     
 
-    <link rel="canonical" href="https://felsec.com/tags/">
-    <link href="/tags/index.xml" rel="alternate" type="application/rss+xml" title="FelSec - Blog">
-    <link href="/tags/index.xml" rel="feed" type="application/rss+xml" title="FelSec - Blog">
+    <link rel="canonical" href="https://felsec.com/posts/n1qlinjection-part8/">
     <link href="/style.min.f8b01aadc1fa69a1eb74db876257286c546d5985a170c943eae5ee646cc82af4.css" rel="stylesheet">
     <link href="/code-highlight.min.706d31975fec544a864cb7f0d847a73ea55ca1df91bf495fd12a177138d807cf.css" rel="stylesheet">
 
@@ -109,14 +156,14 @@ stroke-linejoin="round" class="feather feather-home">
                 </li>
                 
                 <li>
-                    <a class="menu-link " href="/posts/">
+                    <a class="menu-link active" href="/posts/">
                         Posts
                     </a>
                     
                 </li>
                 
                 <li>
-                    <a class="menu-link active" href="/tags/">
+                    <a class="menu-link " href="/tags/">
                         Tags
                     </a>
                     
@@ -137,111 +184,89 @@ stroke-linejoin="round" class="feather feather-home">
         </div>
     </nav>
 </div>
-<div class="wrapper list-page">
-    <header class="header">
-        <h1 class="header-title center">Tags</h1>
-    </header>
+
+<div class="wrapper post">
     <main class="page-content" aria-label="Content">
-        
-        
-        <h2 class="post-year">2026</h2>
+        <article>
+            <header class="header">
+                <h1 class="header-title">N1QL Injection Part 8</h1>
+                
+                
+                
+                <div class="post-meta">
+                    <time datetime="2026-09-09T14:30:00&#43;00:00" itemprop="datePublished"> 9 Sep 2026 </time>
+                </div>
+                
+            </header>
+            
+            <div class="page-content">
+                <h1 id="couchbase-server-memory-exhaustion">Couchbase Server Memory Exhaustion</h1>
+<p>While investigating the <code>UNCOMPRESS()</code> function for compression bomb style attacks (see <a href="/posts/n1qlinjection-part7/">Part 7</a>), I started wondering if any of the other functions could be used to perform similar memory exhaustion attacks against new and old versions of Couchbase Server.</p>
+<p>My first thought was to use the <code>REPEAT</code> function, since it would allow us to repeat an arbitrarily large string as many times as possible. However, the developers at Couchbase suspected that this function might be abused in this manner and have implemented a check to ensure that the resulting string does not exceed the maximum length of 20971520 bytes (20MB).</p>
+<pre tabindex="0"><code>Query:
+select REPEAT(&#39;A&#39;,20971521)
 
-        
+Output:
+[
+  {
+    &#34;code&#34;: 5010,
+    &#34;msg&#34;: &#34;Error evaluating projection&#34;,
+    &#34;reason&#34;: {
+      &#34;_level&#34;: &#34;exception&#34;,
+      &#34;caller&#34;: &#34;util:24&#34;,
+      &#34;cause&#34;: {
+        &#34;element_count&#34;: 20971521,
+        &#34;element_size&#34;: 1,
+        &#34;limit&#34;: 20971520,
+        &#34;size&#34;: 20971521,
+        &#34;term_type&#34;: &#34;repeat()&#34;
+      },
+      &#34;code&#34;: 5037,
+      &#34;key&#34;: &#34;execution.size_error&#34;,
+      &#34;message&#34;: &#34;Size of repeat() result exceeds limit (20971521 &gt; 20971520).&#34;
+    }
+  }
+]
+</code></pre><p>My next thought was: &ldquo;Are there functions similar to <code>REPEAT</code> that don&rsquo;t have this size limit?&rdquo;, and to my surprise the answer was a resounding: Yes! Four of them.</p>
+<p>Specifically the padding functions:</p>
+<ul>
+<li><code>LPAD</code></li>
+<li><code>RPAD</code></li>
+<li><code>MB_LPAD</code></li>
+<li><code>MB_RPAD</code></li>
+</ul>
+<p>These functions take the following arguments:</p>
+<ul>
+<li><code>input string</code> - The string to add the leading characters to</li>
+<li><code>size</code> - The desired length of the final string as an integer</li>
+<li><code>padding character</code> - The character to add to the input string to create the final output</li>
+</ul>
+<p>While the size parameter used in other functions (e.g. <code>REPEAT</code>) has a limit to prevent misuse, the size parameter of the padding functions does not have any limit allowing any positive integer value to be supplied. That being said, similar to the <code>UNCOMPRESS</code> compression bomb issue, setting a size value beyond the memory limit of server does not result in a more effective attack. A string length of 60-80% of the server&rsquo;s available memory seemed to be more reliable, but the amount of time the server would be disrupted for varied from a few minutes to a few hours.</p>
+<h2 id="proof-of-concept">Proof of Concept</h2>
+<p><strong>Query:</strong></p>
+<pre tabindex="0"><code>select RPAD(&#39;felsec&#39;,10737418240,&#39;A&#39;)
+</code></pre><p><strong>Resulting Memory Exhaustion:</strong></p>
+<p>The screenshot below shows the remote server&rsquo;s resources being consumed and the environment becoming unresponsive. (The screenshot was taken approximately 30 minutes after the query began execution).</p>
+<p><img src="/posts/n1qlinjection-part8/01-memoryexhaustion.png" alt="Memory Exhaustion - Btop"></p>
+<h2 id="what-is-the-impact">What is the impact?</h2>
+<p>A successful and sustained attack would render the server unusable and prevent other queries from executing or completing successfully.</p>
+<h2 id="what-to-do-about-it">What to do about it?</h2>
+<p>Upgrade to the latest version of Couchbase Server.</p>
+<p>Configure per-request memory quotas in line with Couchbase&rsquo;s recommendations (more details here: <a href="https://www.couchbase.com/blog/memory-management-couchbase-query-service/">Query Service Memory Management in Couchbase</a>) and the application&rsquo;s requirements.</p>
+<p><em><strong>Note:</strong> This vulnerability could be triggered even if the per server query memory quota had been configured. Per query memory quotas did prevent the memory exhaustion from occurring when a single query was sent, however sending multiple queries in quick succession or in parallel would still lead to a server&rsquo;s resources being consumed.</em></p>
+<h2 id="disclosure-timeline">Disclosure Timeline</h2>
+<p>This vulnerability was disclosed to Couchbase on the 23<sup>rd</sup> May 2026 via their &ldquo;Report a Vulnerability&rdquo; form. To this date the issue has not been acknowledged by Couchbase and subsequent attempts to reach out to them have been unsuccessful.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-lpad">https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/stringfun.html#fn-str-lpad</a></li>
+<li><a href="https://www.couchbase.com/alerts/">https://www.couchbase.com/alerts/</a></li>
+<li><a href="https://docs.couchbase.com/server/8.0/release-notes/relnotes.html">https://docs.couchbase.com/server/8.0/release-notes/relnotes.html</a></li>
+</ul>
 
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/tags/n1ql/">N1QL</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2026-09-09T14:30:00Z">
-        9 Sep 2026
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/tags/injection/">Injection</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2026-09-09T14:30:00Z">
-        9 Sep 2026
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/tags/couchbase/">Couchbase</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2026-09-09T14:30:00Z">
-        9 Sep 2026
-    </time>
-</article>
-
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/tags/tools/">Tools</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2026-03-02T20:02:00Z">
-        2 Mar 2026
-    </time>
-</article>
-
-
-         
-
-        
-        
-        <h2 class="post-year">2020</h2>
-
-        
-
-        
-
-        <article class="post-item">
-    <h4 class="post-item-title">
-        <a href="/tags/tryhackme/">TryHackMe</a>
-    </h4>
-    
-    
-    
-    
-    <time class="post-item-meta" datetime="2020-11-07T18:57:56&#43;0100">
-        7 Nov 2020
-    </time>
-</article>
-
-
-         
-
-         
-
-    </main>
-</div><footer class="footer">
+            </div>
+        </article></main>
+</div>
+<footer class="footer">
     <span class="footer_item"> </span>
     &nbsp;
 
