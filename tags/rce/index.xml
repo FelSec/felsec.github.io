@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RCE on FelSec - Blog</title>
+    <link>https://felsec.com/tags/rce/</link>
+    <description>Recent content in RCE on FelSec - Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Mon, 28 Sep 2026 15:20:00 +0100</lastBuildDate><atom:link href="https://felsec.com/tags/rce/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Umbraco CMS - Security Advisory GHSA-f7m5-5x7g-2p52</title>
+      <link>https://felsec.com/posts/umbracocms-ghsa-f7m5-5x7g-2p52/</link>
+      <pubDate>Mon, 28 Sep 2026 15:20:00 +0100</pubDate>
+      
+      <guid>https://felsec.com/posts/umbracocms-ghsa-f7m5-5x7g-2p52/</guid>
+      
+      <description>Umbraco CMS - Remote Code Execution via Inconsistent Authorisation</description>
+      
+    </item>
+    
+  </channel>
+</rss>

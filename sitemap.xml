@@ -2,10 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://felsec.com/tags/couchbase/</loc>
-    <lastmod>2026-09-09T14:30:00+00:00</lastmod>
-  </url><url>
     <loc>https://felsec.com/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/posts/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/tags/rce/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/tags/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/posts/umbracocms-ghsa-f7m5-5x7g-2p52/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/tags/umbracocms/</loc>
+    <lastmod>2026-09-28T15:20:00+01:00</lastmod>
+  </url><url>
+    <loc>https://felsec.com/tags/couchbase/</loc>
     <lastmod>2026-09-09T14:30:00+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/tags/injection/</loc>
@@ -15,12 +30,6 @@
     <lastmod>2026-09-09T14:30:00+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/posts/n1qlinjection-part8/</loc>
-    <lastmod>2026-09-09T14:30:00+00:00</lastmod>
-  </url><url>
-    <loc>https://felsec.com/posts/</loc>
-    <lastmod>2026-09-09T14:30:00+00:00</lastmod>
-  </url><url>
-    <loc>https://felsec.com/tags/</loc>
     <lastmod>2026-09-09T14:30:00+00:00</lastmod>
   </url><url>
     <loc>https://felsec.com/posts/n1qlinjection-part7/</loc>
